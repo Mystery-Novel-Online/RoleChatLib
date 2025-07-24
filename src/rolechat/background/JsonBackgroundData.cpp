@@ -20,6 +20,9 @@ void JsonBackgroundData::loadBackground(const std::string &backgroundPath)
     for (auto& [key, pos] : j["positions"].items()) 
     {
         assignPosition(key, { pos["background"].get<std::string>(), pos["foreground"].get<std::string>() });
+        std::cout << "Position key: " << key
+                  << ", background: " << backgroundFilename(key)
+                  << ", foreground: " << foregroundFilename(key) << "\n";
     }
 
 }
