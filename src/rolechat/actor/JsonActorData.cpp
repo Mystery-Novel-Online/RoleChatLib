@@ -1,5 +1,4 @@
 #include "rolechat/actor/JsonActorData.h"
-#include "JsonActorData.h"
 #include <filesystem>
 #include <fstream>
 #include <algorithm>
@@ -77,7 +76,6 @@ void JsonActorData::reload()
         try {
             modifiedTime = fs::last_write_time(fs::path(fullOutfitPath)).time_since_epoch().count();
         } catch (...) {
-            // If file doesn't exist, skip
             continue;
         }
 
