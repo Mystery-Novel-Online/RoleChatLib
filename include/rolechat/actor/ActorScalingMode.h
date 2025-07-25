@@ -1,8 +1,13 @@
 #pragma once
 namespace rolechat::actor {
 enum class ActorScalingMode {
-    Automatic,
+    NoScaling,
+    WidthScaling,
+    HeightScaling,
+    StretchScaling,
+    DynamicScaling,
     WidthSmoothScaling,
-    WidthPixelScaling
+    WidthPixelScaling,
+    AutomaticScaling
 };
 }

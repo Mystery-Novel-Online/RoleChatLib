@@ -8,7 +8,7 @@ ActorScalingMode IActorData::scalingMode() const
     {
         {"width_smooth", ActorScalingMode::WidthSmoothScaling},
         {"width_pixels", ActorScalingMode::WidthPixelScaling},
-        {"automatic", ActorScalingMode::Automatic}
+        {"automatic", ActorScalingMode::AutomaticScaling}
     };
 
     std::string mode = m_scalingMode;
@@ -16,7 +16,7 @@ ActorScalingMode IActorData::scalingMode() const
 
     auto it = scalingModeMap.find(mode);
     if (it != scalingModeMap.end()) return it->second;
-    return ActorScalingMode::Automatic;
+    return ActorScalingMode::AutomaticScaling;
 }
 
 std::string IActorData::buttonImage(const ActorEmote &emote, bool enabled) const
