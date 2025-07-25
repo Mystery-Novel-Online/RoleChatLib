@@ -1,5 +1,4 @@
 #include "rolechat/actor/IActorData.h"
-#include "IActorData.h"
 
 using namespace rolechat::actor;
 
@@ -20,13 +19,13 @@ ActorScalingMode IActorData::scalingMode() const
     return ActorScalingMode::Automatic;
 }
 
-std::string rolechat::actor::IActorData::buttonImage(const ActorEmote &emote, bool enabled)
+std::string IActorData::buttonImage(const ActorEmote &emote, bool enabled) const
 {
     std::string state = enabled ? "on" : "off";
     return "emotions/button" + emote.key + "_" + state + ".png";
 }
 
-std::string rolechat::actor::IActorData::selectedImage(const ActorEmote &emote)
+std::string IActorData::selectedImage(const ActorEmote &emote) const
 {
     return "emotions/selected.png";
 }
