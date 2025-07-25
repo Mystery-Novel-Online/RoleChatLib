@@ -131,7 +131,7 @@ std::string JsonActorData::showname() const
     return outfitShowname.empty() ? IActorData::showname() : outfitShowname;
 }
 
-std::vector<ActorEmote> JsonActorData::emotes() const
+std::vector<ActorEmote> JsonActorData::emotes()
 {
     const std::string& currentOutfit = outfit();
 

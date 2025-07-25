@@ -23,7 +23,6 @@ public:
     virtual void load(const std::string& folder, const std::string& path) = 0;
     virtual void reload() {}
 
-    
     virtual std::string outfit()    const { return m_currentOutfit; }
     virtual std::string folder()    const { return m_folder; }
     virtual std::string showname()  const { return m_showname.empty() ? m_folder : m_showname;}
@@ -34,7 +33,7 @@ public:
 
     virtual std::vector<ActorScalingPreset> scalingPresets() const { return m_presets; }
     virtual std::vector<std::string> outfitNames() const {  return {}; }
-    virtual std::vector<ActorEmote> emotes() const { return m_emotes; } 
+    virtual std::vector<ActorEmote> emotes() { return m_emotes; } 
 
     virtual std::string buttonImage(const ActorEmote& emote, bool enabled) const;
     virtual std::string selectedImage(const ActorEmote& emote) const;

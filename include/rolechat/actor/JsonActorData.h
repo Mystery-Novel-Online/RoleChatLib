@@ -19,7 +19,7 @@ public:
 
     std::string showname() const override;
     std::vector<std::string> outfitNames() const override { return m_outfitNames; }
-    std::vector<ActorEmote> emotes() const override;
+    std::vector<ActorEmote> emotes() override;
 
     std::string buttonImage(const ActorEmote& emote, bool enabled) const override;
     std::string selectedImage(const ActorEmote& emote) const override;
