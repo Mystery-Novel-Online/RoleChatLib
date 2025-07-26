@@ -33,7 +33,6 @@ namespace rolechat::fs::paths
   std::string basePath();
   std::string packagePath(const std::string& packageName);
 
-  std::string findDirectory(const std::string& directoryPath, bool allowPackages = true, bool absolutePath = true);
   std::vector<std::string> getDirectoryList(const std::string& directoryPath, bool includePackages = true);
   std::vector<std::string> getFileList(const std::string& directoryPath, bool includePackages = true, const std::string& extensionFilter = "", bool includeExtension = false);
   std::vector<std::string> getFileList(const std::string& directoryPath, const std::string& packageName, const std::string& extensionFilter = "", bool includeExtension = false);

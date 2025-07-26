@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
+#include "rolechat/filesystem/RCDir.h"
 using namespace rolechat::fs;
 
 bool checks::directoryExists(const std::string &path)
@@ -14,7 +14,7 @@ bool checks::directoryExists(const std::string &path)
 
 bool checks::characterExists(const std::string &path)
 {
-    return directoryExists(paths::findDirectory("characters/" + path));
+    return RCDir("characters/" + path).exists();
 }
 
 // Implementation of PackageManager variables
@@ -113,26 +113,6 @@ std::string paths::basePath()
 std::string paths::packagePath(const std::string &packageName)
 {
     return applicationPath() + "/packages/" + packageName + "/";
-}
-
-std::string paths::findDirectory(const std::string &directoryPath, bool allowPackages, bool absolutePath)
-{
-    if (!allowPackages)
-        return basePath() + directoryPath;
-
-    for (const auto& packageName : PackageManager::packageNames()) 
-    {
-        if (std::find(PackageManager::disabledList().begin(), PackageManager::disabledList().end(), packageName) == PackageManager::disabledList().end()) 
-        {
-            std::string packageDir = packagePath(packageName) + directoryPath;
-            if (checks::directoryExists(packageDir))
-                return packageDir;
-        }
-    }
-
-    if (absolutePath)
-        return basePath() + directoryPath;
-    return "base/" + directoryPath;
 }
 
 std::vector<std::string> paths::getDirectoryList(const std::string &directoryPath, bool includePackages)
