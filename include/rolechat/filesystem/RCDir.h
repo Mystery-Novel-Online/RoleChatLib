@@ -22,6 +22,11 @@ public:
 
     bool exists() const;
     static bool exists(const std::string &path);
+
+
+    static std::string applicationPath();
+    static std::string basePath();
+    static std::string packagePath(const std::string& packageName);
 private:
     std::vector<std::string> m_filePathList;
     bool m_allowPackages = true;

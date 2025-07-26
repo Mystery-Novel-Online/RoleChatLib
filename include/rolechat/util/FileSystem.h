@@ -23,21 +23,12 @@ private:
 
 namespace rolechat::fs::checks
 {
-  bool directoryExists(const std::string& path);
   bool characterExists(const std::string& character);
-}
-
-namespace rolechat::fs::paths
-{
-  std::string applicationPath();
-  std::string basePath();
-  std::string packagePath(const std::string& packageName);
 }
 
 namespace rolechat::fs::formats
 {
   std::vector<std::string> supportedAudio(bool allowExtensionless = false);
-
   std::vector<std::string> supportedImages();
   std::vector<std::string> animatedImages();
   std::vector<std::string> staticImages(); 

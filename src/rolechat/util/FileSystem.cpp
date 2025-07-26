@@ -7,33 +7,22 @@
 #include "rolechat/filesystem/RCDir.h"
 using namespace rolechat::fs;
 
-bool checks::directoryExists(const std::string &path)
-{
-    return std::filesystem::exists(path) && std::filesystem::is_directory(path);
-}
-
 bool checks::characterExists(const std::string &path)
 {
     return RCDir("characters/" + path).exists();
 }
 
-// Implementation of PackageManager variables
+std::vector<std::string> PackageManager::m_packageNames;
+std::vector<std::string> PackageManager::m_disabledPackages;
 
-namespace rolechat::fs {
-    std::vector<std::string> PackageManager::m_packageNames;
-    std::vector<std::string> PackageManager::m_disabledPackages;
-}
-
-// Implementation of PackageManager methods
 std::vector<std::string> PackageManager::scanPackages()
 {
     m_packageNames.clear();
 
     // Scan the packages directory for subdirectories
-    std::string packagesPath = paths::applicationPath() + "/packages/";
-    if(checks::directoryExists(packagesPath)) 
+    if(RCDir::exists("packages")) 
     {
-        for (const auto& entry : std::filesystem::directory_iterator(packagesPath)) 
+        for (const auto& entry : std::filesystem::directory_iterator(RCDir::applicationPath() + "/packages/")) 
         {
            if (entry.is_directory()) 
            {
@@ -46,7 +35,7 @@ std::vector<std::string> PackageManager::scanPackages()
 
 
     // Check for disabled packages configuration
-    std::string iniPath = paths::basePath() + "packages.ini";
+    std::string iniPath = RCDir::basePath() + "packages.ini";
     std::ifstream iniFile(iniPath);
     m_disabledPackages.clear();
     if (iniFile.is_open()) 
@@ -82,7 +71,7 @@ void PackageManager::setDisabledList(std::vector<std::string> disableList)
 
 void PackageManager::saveDisabled()
 {
-    std::string iniPath = paths::basePath() + "packages.ini";
+    std::string iniPath = RCDir::basePath() + "packages.ini";
     std::ofstream iniFile(iniPath, std::ios::trunc);
 
     if (!iniFile.is_open())
@@ -93,28 +82,6 @@ void PackageManager::saveDisabled()
         iniFile << pkg << "\r\n";
     }
 }
-
-// Implementation of paths functions
-std::string paths::applicationPath()
-{
-    auto path = std::filesystem::current_path();
-#if defined(__APPLE__)
-    for (int i = 0; i < 3; ++i)
-        path = path.parent_path();
-#endif
-    return path.string();
-}
-
-std::string paths::basePath()
-{
-    return applicationPath() + "/base/";
-}
-
-std::string paths::packagePath(const std::string &packageName)
-{
-    return applicationPath() + "/packages/" + packageName + "/";
-}
-
 
 std::vector<std::string> formats::supportedAudio(bool allowExtensionless)
 {

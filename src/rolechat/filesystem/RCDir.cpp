@@ -24,7 +24,7 @@ std::string RCDir::findFirst() const
             {
                 for (const auto& candidate : m_filePathList) 
                 {
-                    std::string baseDir = paths::packagePath(packageName) + candidate;
+                    std::string baseDir = packagePath(packageName) + candidate;
                     if (exists(baseDir)) 
                         return baseDir;
                 }
@@ -34,7 +34,7 @@ std::string RCDir::findFirst() const
 
     for (const auto& candidate : m_filePathList) 
     {
-        std::string baseDir = paths::basePath() + candidate;
+        std::string baseDir = basePath() + candidate;
         if (exists(baseDir)) 
             return baseDir;
     }
@@ -55,7 +55,7 @@ std::vector<std::string> RCDir::findAll() const
             {
                 for (const auto& candidate : m_filePathList) 
                 {
-                    std::string baseDir = paths::packagePath(packageName) + candidate;
+                    std::string baseDir = packagePath(packageName) + candidate;
                     if (!exists(baseDir)) 
                         continue;
                     result.push_back(baseDir);
@@ -66,7 +66,7 @@ std::vector<std::string> RCDir::findAll() const
 
     for (const auto& candidate : m_filePathList) 
     {
-        std::string baseDir = paths::basePath() + candidate;
+        std::string baseDir = basePath() + candidate;
         if (!exists(baseDir)) 
             continue;
         result.push_back(baseDir);
@@ -173,4 +173,26 @@ std::vector<std::string> RCDir::fileList(const std::string &directory, const std
     
 
     return result;
+}
+
+
+// Implementation of paths functions
+std::string RCDir::applicationPath()
+{
+    auto path = std::filesystem::current_path();
+#if defined(__APPLE__)
+    for (int i = 0; i < 3; ++i)
+        path = path.parent_path();
+#endif
+    return path.string();
+}
+
+std::string RCDir::basePath()
+{
+    return applicationPath() + "/base/";
+}
+
+std::string RCDir::packagePath(const std::string &packageName)
+{
+    return applicationPath() + "/packages/" + packageName + "/";
 }

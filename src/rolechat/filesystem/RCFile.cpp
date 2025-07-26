@@ -1,5 +1,6 @@
 #include "rolechat/filesystem/RCFile.h"
 #include "rolechat/util/FileSystem.h"
+#include "rolechat/filesystem/RCDir.h"
 #include <filesystem>
 #include <fstream>
 
@@ -42,7 +43,7 @@ std::string RCFile::findFirst() const
             {
                 for (const auto& candidate : candidates) 
                 {
-                    std::string packagePath = paths::packagePath(packageName) + candidate;
+                    std::string packagePath = RCDir::packagePath(packageName) + candidate;
                     if (exists(packagePath))
                         return packagePath;
                 }
@@ -52,7 +53,7 @@ std::string RCFile::findFirst() const
 
     for (const auto& candidate : candidates) 
     {
-        std::string baseFilePath = paths::basePath() + candidate;
+        std::string baseFilePath = RCDir::basePath() + candidate;
         if (exists(baseFilePath))
             return baseFilePath;
     }
@@ -81,7 +82,7 @@ std::vector<std::string> RCFile::findAll() const
         {
             for (const auto& candidate : candidates) 
             {
-                std::string packagePath = paths::packagePath(packageName) + candidate;
+                std::string packagePath = RCDir::packagePath(packageName) + candidate;
                 if (exists(packagePath))
                     results.push_back(packagePath);
             }
@@ -89,7 +90,7 @@ std::vector<std::string> RCFile::findAll() const
     }
 
     for (const auto& candidate : candidates) {
-        std::string baseFilePath = paths::basePath() + candidate;
+        std::string baseFilePath = RCDir::basePath() + candidate;
         if (exists(baseFilePath))
             results.push_back(baseFilePath);
     }
