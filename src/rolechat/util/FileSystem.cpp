@@ -6,10 +6,6 @@
 #include <algorithm>
 
 using namespace rolechat::fs;
-bool checks::fileExists(const std::string &path)
-{
-    return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
-}
 
 bool checks::directoryExists(const std::string &path)
 {
@@ -117,39 +113,6 @@ std::string paths::basePath()
 std::string paths::packagePath(const std::string &packageName)
 {
     return applicationPath() + "/packages/" + packageName + "/";
-}
-
-std::vector<std::string> paths::findFiles(const std::string &filePath, const std::vector<std::string> &extensions)
-{
-    std::vector<std::string> results;
-    std::vector<std::string> candidates;
-
-    if (!extensions.empty()) {
-        for (const auto& ext : extensions)
-            candidates.push_back(filePath + ext);
-    } else {
-        candidates.push_back(filePath);
-    }
-
-    // Search in base path
-    for (const auto& candidate : candidates) {
-        std::string baseFilePath = basePath() + candidate;
-        if (checks::fileExists(baseFilePath))
-            results.push_back(baseFilePath);
-    }
-
-    // Search in packages
-    for (const auto& packageName : PackageManager::packageNames()) {
-        if (std::find(PackageManager::disabledList().begin(), PackageManager::disabledList().end(), packageName) == PackageManager::disabledList().end()) {
-            for (const auto& candidate : candidates) {
-                std::string packagePath = paths::packagePath(packageName) + candidate;
-                if (checks::fileExists(packagePath))
-                    results.push_back(packagePath);
-            }
-        }
-    }
-
-    return results;
 }
 
 std::string paths::findDirectory(const std::string &directoryPath, bool allowPackages, bool absolutePath)

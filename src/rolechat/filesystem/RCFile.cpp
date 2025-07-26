@@ -1,5 +1,7 @@
 #include "rolechat/filesystem/RCFile.h"
 #include "rolechat/util/FileSystem.h"
+#include <filesystem>
+#include <fstream>
 
 using namespace rolechat::fs;
 
@@ -93,4 +95,14 @@ std::vector<std::string> RCFile::findAll() const
     }
 
     return results;
+}
+
+bool RCFile::exists(const std::string &path)
+{
+    return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
+}
+
+bool RCFile::exists() const
+{
+    return findFirst().empty() == false;
 }

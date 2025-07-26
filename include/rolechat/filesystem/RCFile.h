@@ -16,7 +16,9 @@ public:
 
     std::string findFirst() const;
     std::vector<std::string> findAll() const;
-    
+
+    bool exists() const;
+    static bool exists(const std::string &path);
 private:
     std::vector<std::string> m_fileNameList;
     std::vector<std::string> m_extensions;

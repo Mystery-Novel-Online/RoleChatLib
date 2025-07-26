@@ -23,7 +23,6 @@ private:
 
 namespace rolechat::fs::checks
 {
-  bool fileExists(const std::string& path);
   bool directoryExists(const std::string& path);
   bool characterExists(const std::string& character);
 }
@@ -33,8 +32,6 @@ namespace rolechat::fs::paths
   std::string applicationPath();
   std::string basePath();
   std::string packagePath(const std::string& packageName);
-
-  std::vector<std::string> findFiles(const std::string& filePath, const std::vector<std::string> &extensions = {});
 
   std::string findDirectory(const std::string& directoryPath, bool allowPackages = true, bool absolutePath = true);
   std::vector<std::string> getDirectoryList(const std::string& directoryPath, bool includePackages = true);
