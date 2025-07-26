@@ -14,6 +14,12 @@ public:
     std::string findFirst() const;
     std::vector<std::string> findAll() const;
 
+    std::vector<std::string> subDirectories() const;
+    static std::vector<std::string> subDirectories(const std::string &path);
+
+    std::vector<std::string> fileList(const std::string &extensionFilter = "", bool includeExtension = true) const;
+    static std::vector<std::string> fileList(const std::string &directory, const std::string &extensionFilter, bool includeExtension);
+
     bool exists() const;
     static bool exists(const std::string &path);
 private:

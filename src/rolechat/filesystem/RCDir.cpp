@@ -84,3 +84,93 @@ bool RCDir::exists() const
 {
     return findFirst().empty() == false;
 }
+
+std::vector<std::string> RCDir::subDirectories() const
+{
+    std::vector<std::string> result;
+
+    std::vector<std::string> directoryList = findAll();
+    for (const auto& candidate : directoryList) 
+    {
+        for (const auto& entry : std::filesystem::directory_iterator(candidate)) 
+        {
+            if (entry.is_directory())
+                result.push_back(entry.path().filename().string());
+        }
+    }
+
+    return result;
+}
+
+std::vector<std::string> RCDir::subDirectories(const std::string &path)
+{
+    std::vector<std::string> result;
+
+    if(!exists(path))
+        return result;
+        
+    for (const auto& entry : std::filesystem::directory_iterator(path)) 
+    {
+        if (entry.is_directory())
+            result.push_back(entry.path().filename().string());
+    }
+
+    return result;
+}
+
+std::vector<std::string> RCDir::fileList(const std::string &extensionFilter, bool includeExtension) const
+{
+    std::vector<std::string> result;
+    std::vector<std::string> candidates = findAll();
+
+    for (const auto& candidate : candidates) 
+    {
+        for (const auto& entry : std::filesystem::directory_iterator(candidate))
+        {
+            if (entry.is_regular_file()) {
+                std::string filename = entry.path().filename().string();
+                std::string ext = entry.path().extension().string();
+                if (!extensionFilter.empty()) 
+                {
+                    if (ext.empty() || ext.substr(1) != extensionFilter)
+                        continue;
+                }
+
+                if (includeExtension)
+                    result.push_back(filename);
+                else
+                    result.push_back(entry.path().stem().string());
+                }
+            }
+    }
+
+    return result;
+}
+
+std::vector<std::string> RCDir::fileList(const std::string &directory, const std::string &extensionFilter, bool includeExtension)
+{
+    std::vector<std::string> result;
+
+    if(!exists(directory))
+        return result;
+
+    for (const auto& entry : std::filesystem::directory_iterator(directory))
+    {
+        if (entry.is_regular_file()) {
+            std::string filename = entry.path().filename().string();
+            std::string ext = entry.path().extension().string();
+            if (!extensionFilter.empty()) 
+            {
+                if (ext.empty() || ext.substr(1) != extensionFilter)
+                    continue;
+            }
+            if (includeExtension)
+                result.push_back(filename);
+            else
+                result.push_back(entry.path().stem().string());
+            }
+        }
+    
+
+    return result;
+}

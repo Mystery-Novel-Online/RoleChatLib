@@ -44,6 +44,26 @@ void test_rc_directory()
     for (const std::string& path : allDirs) {
         printFileStatus(path, RCDir::exists(path));
     }
+    std::cout << "Subfolders within 'characters':\n";
+    for (const std::string& path : rcDir.subDirectories()) {
+        printFileStatus(path, true);
+    }
+
+    std::cout << "Subfolders within base characters:\n";
+    for (const std::string& path : RCDir::subDirectories("base/characters")) {
+        printFileStatus(path, true);
+    }
+
+    std::cout << "Character Animations:\n";
+    for (const std::string& path : RCDir("animations/characters").fileList("json", true)) {
+        printFileStatus(path, true);
+    }
+
+    std::cout << "Build Files:\n";
+    for (const std::string& path : RCDir::fileList("build/debug", "", true)) {
+        printFileStatus(path, true);
+    }
+
 }
 
 void test_rc_file()
