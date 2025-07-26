@@ -1,5 +1,6 @@
 #include "rolechat/actor/ActorOutfit.h"
 #include "rolechat/util/FileSystem.h"
+#include "rolechat/filesystem/RCFile.h"
 
 using namespace rolechat::actor;
 
@@ -8,7 +9,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
     m_path = characterPath + "/outfits/" + outfit;
     std::string jsonPath = m_path + "/outfit.json";
 
-    if(!fs::checks::fileExists(jsonPath))
+    if(!fs::RCFile::exists(jsonPath))
         return;
 
     bool validJson = false;
