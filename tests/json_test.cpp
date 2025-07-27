@@ -98,6 +98,15 @@ void test_theme_reading()
     for (const std::string& path : themeModule.moduleNames()) {
         printFileStatus(path, true);
     }
+    std::cout << "Game modes found in ExampleTheme':\n";
+    for (const std::string& path : themeModule.gamemodes()) {
+        printFileStatus(path, true);
+    }
+
+    std::cout << "Time modes found in ExampleTheme':\n";
+    for (const std::string& path : themeModule.timemodes()) {
+        printFileStatus(path, true);
+    }
 }
 
 int main() {
