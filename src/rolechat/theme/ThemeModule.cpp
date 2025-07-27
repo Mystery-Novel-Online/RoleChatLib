@@ -33,18 +33,31 @@ ThemeModule::ThemeModule(std::string gamemodePath, std::string moduleName) : m_g
         if (!elementObject.is_object()) continue;
 
         ThemeElement element;
-        element.position.x = elementObject["position"]["x"].get<int>();
-        element.position.y = elementObject["position"]["y"].get<int>();
-        element.position.width = elementObject["position"]["width"].get<int>();
-        element.position.height = elementObject["position"]["height"].get<int>();
+        element.position.x = elementObject["position"].value("x", 0);
+        element.position.y = elementObject["position"].value("y", 0);
+        element.position.width = elementObject["position"].value("width", 0);
+        element.position.height = elementObject["position"].value("height", 0);
 
-        element.font.name = elementObject["font"]["name"].get<std::string>();
-        element.font.color = elementObject["font"]["color"].get<std::string>();
-        element.font.alignment = elementObject["font"]["alignment"].get<std::string>();
-        element.font.size = elementObject["font"]["size"].get<int>();
-        element.font.bold = elementObject["font"].value("bold", false);
-        element.font.italic = elementObject["font"].value("italic", false);
-        element.font.outline = elementObject["font"].value("outline", false);
+        if(elementObject.contains("font") && elementObject["font"].is_object()) 
+        {
+            element.font.name = elementObject["font"].value("name", "");
+            element.font.color = elementObject["font"].value("color", "");
+            element.font.alignment = elementObject["font"].value("alignment", "left");
+            element.font.size = elementObject["font"].value("size", 12);
+            element.font.bold = elementObject["font"].value("bold", false);
+            element.font.italic = elementObject["font"].value("italic", false);
+            element.font.outline = elementObject["font"].value("outline", false);
+        } 
+        else 
+        {
+            element.font.name = "";
+            element.font.color = "#000000";
+            element.font.alignment = "left";
+            element.font.size = 12;
+            element.font.bold = false;
+            element.font.italic = false;
+            element.font.outline = false;
+        }
 
         m_scenes[ThemeSceneType::SceneType_Courtroom].elements[identifier] = element;
     }

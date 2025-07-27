@@ -3,6 +3,7 @@
 #include "rolechat/filesystem/RCDir.h"
 #include "rolechat/util/FileSystem.h"
 #include "rolechat/theme/ThemeModule.h"
+#include "rolechat/theme/ThemeGameMode.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -92,7 +93,11 @@ void test_theme_reading()
 {
     using namespace rolechat::theme;
     printDivider("Theme Module");
-    ThemeModule themeModule("themes/ExampleTheme", "character_select");
+    ThemeGameMode themeModule("themes/ExampleTheme");
+    std::cout << "Modules found in ExampleTheme':\n";
+    for (const std::string& path : themeModule.moduleNames()) {
+        printFileStatus(path, true);
+    }
 }
 
 int main() {
