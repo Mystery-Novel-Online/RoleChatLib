@@ -7,6 +7,12 @@
 
 using namespace rolechat::JsonUtils;
 
+JsonData rolechat::JsonUtils::loadFile(const std::string &path)
+{
+    bool validJson = false;
+    return loadFile(path, validJson);
+}
+
 JsonData rolechat::JsonUtils::loadFile(const std::string &path, bool &validJson)
 {
     std::ifstream file(path);

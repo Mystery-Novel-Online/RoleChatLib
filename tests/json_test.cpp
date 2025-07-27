@@ -2,6 +2,7 @@
 #include "rolechat/filesystem/RCFile.h"
 #include "rolechat/filesystem/RCDir.h"
 #include "rolechat/util/FileSystem.h"
+#include "rolechat/theme/ThemeModule.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -87,9 +88,17 @@ void test_rc_file()
     }
 }
 
+void test_theme_reading()
+{
+    using namespace rolechat::theme;
+    printDivider("Theme Module");
+    ThemeModule themeModule("themes/ExampleTheme", "character_select");
+}
+
 int main() {
     test_package_manager();
     test_rc_file();
     test_rc_directory();
+    test_theme_reading();
     return 0;
 }
