@@ -110,13 +110,13 @@ void test_theme_reading()
 
     const ThemeElement* element = themeModule.getElement(ThemeSceneType::SceneType_Courtroom, "effect_flash");
     if (element) {
-        std::cout << "Element 'exampleElement' found in SceneType_Courtroom:\n";
+        std::cout << "Element 'effect_flash' found in SceneType_Courtroom:\n";
         std::cout << "  Position: (" << element->position.x << ", " << element->position.y << ", "
                   << element->position.width << ", " << element->position.height << ")\n";
         std::cout << "  Font: " << element->font.name << ", Color: " << element->font.color
                   << ", Size: " << element->font.size << "\n";
     } else {
-        std::cout << "Element 'exampleElement' not found in SceneType_Courtroom.\n";
+        std::cout << "Element 'effect_flash' not found in SceneType_Courtroom.\n";
     }
 }
 
