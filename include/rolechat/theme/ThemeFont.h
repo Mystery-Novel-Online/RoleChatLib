@@ -10,6 +10,8 @@ struct ThemeFont {
     bool bold = false;
     bool italic = false;
     bool outline = false;
+    std::string outlineColor;
+    int outlineSize = 1;
 };
 }
 #endif

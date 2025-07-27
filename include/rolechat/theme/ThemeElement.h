@@ -7,7 +7,9 @@
 namespace rolechat::theme {
 struct ThemeElement {
     RPRect position;
+    double rotation = 0.0;
     ThemeFont font;
+    //Vector2D spacing
 };
 }
 #endif
