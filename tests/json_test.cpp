@@ -4,6 +4,7 @@
 #include "rolechat/util/FileSystem.h"
 #include "rolechat/theme/ThemeModule.h"
 #include "rolechat/theme/ThemeGameMode.h"
+#include "rolechat/config/ConfigUserSettings.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -120,10 +121,30 @@ void test_theme_reading()
     }
 }
 
+void test_config_file()
+{
+    using namespace rolechat::config;
+    printDivider("Config User Settings");
+    ConfigUserSettings::load();
+    std::cout << "Boolean value for 'test_boolean': "
+              << ConfigUserSettings::booleanValue("test_boolean") << "\n";
+    std::cout << "Integer value for 'test_integer': "
+              << ConfigUserSettings::intergerValue("test_integer") << "\n";
+    std::cout << "String value for 'test_string': "
+              << ConfigUserSettings::stringValue("test_string") << "\n";
+
+    ConfigUserSettings::setValue("test_boolean", true);
+    ConfigUserSettings::setValue("test_integer", 42);
+    ConfigUserSettings::setString("test_string", "Hello, World!");
+    ConfigUserSettings::save();
+    std::cout << "Saved test values to config.\n";
+}
+
 int main() {
     test_package_manager();
     test_rc_file();
     test_rc_directory();
     test_theme_reading();
+    test_config_file();
     return 0;
 }
