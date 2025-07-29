@@ -8,6 +8,7 @@ using namespace rolechat::config;
 std::unordered_map<std::string, std::string> ConfigUserSettings::m_configStrings = {};
 std::unordered_map<std::string, bool> ConfigUserSettings::m_configBooleans = {};
 std::unordered_map<std::string, int> ConfigUserSettings::m_configIntegers = {};
+std::unordered_map<std::string, float> ConfigUserSettings::m_configFloats = {};
 
 void ConfigUserSettings::save()
 {
@@ -21,6 +22,9 @@ void ConfigUserSettings::save()
         configObject[key] = value;
     
     for (const auto& [key, value] : m_configIntegers) 
+        configObject[key] = value;
+    
+    for (const auto& [key, value] : m_configFloats) 
         configObject[key] = value;
 
     JsonData fileObject;
@@ -70,7 +74,9 @@ void ConfigUserSettings::load()
             m_configBooleans[key] = value.get<bool>();
         } else if (value.is_number_integer()) {
             m_configIntegers[key] = value.get<int>();
-        } else {
+        } else if (value.is_number_float()) {
+            m_configFloats[key] = value.get<float>();
+        }  else {
             std::cerr << "Unknown type for config key: " << key << "\n";
         }
     }

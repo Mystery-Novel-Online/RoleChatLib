@@ -11,6 +11,7 @@ public:
 
     static void setValue(std::string key, bool value) { m_configBooleans[key] = value;}
     static void setValue(std::string key, int value) { m_configIntegers[key] = value;}
+    static void setValue(std::string key, float value) { m_configFloats[key] = value;}
     static void setString(std::string key, const std::string& value) { m_configStrings[key] = value;}
 
     static int intergerValue(const std::string &key, int defaultValue = 0) {
@@ -28,10 +29,16 @@ public:
         return it != m_configStrings.end() ? it->second : defaultValue;
     }
 
+    static float floatValue(const std::string &key, float defaultValue = 0.0f) {
+        auto it = m_configFloats.find(key);
+        return it != m_configFloats.end() ? it->second : defaultValue;
+    }
+
 private:
     static std::unordered_map<std::string, std::string> m_configStrings;
-    static std::unordered_map<std::string, bool> m_configBooleans;
+    static std::unordered_map<std::string, float> m_configFloats;
     static std::unordered_map<std::string, int> m_configIntegers;
+    static std::unordered_map<std::string, bool> m_configBooleans;
 };
 }
 #endif
