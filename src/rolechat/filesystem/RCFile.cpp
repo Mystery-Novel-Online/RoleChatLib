@@ -3,6 +3,7 @@
 #include "rolechat/filesystem/RCDir.h"
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 
 using namespace rolechat::fs;
 
@@ -106,4 +107,13 @@ bool RCFile::exists(const std::string &path)
 bool RCFile::exists() const
 {
     return findFirst().empty() == false;
+}
+
+std::string RCFile::caseSensitivePath(const std::string &inputPath)
+{
+    std::string result = inputPath;
+    while (result.find("//") != std::string::npos) {
+        result.replace(result.find("//"), 2, "/");
+    }
+    return result;
 }

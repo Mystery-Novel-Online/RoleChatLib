@@ -19,6 +19,8 @@ public:
 
     bool exists() const;
     static bool exists(const std::string &path);
+    static std::string caseSensitivePath(const std::string &path);
+
 private:
     std::vector<std::string> m_fileNameList;
     std::vector<std::string> m_extensions;

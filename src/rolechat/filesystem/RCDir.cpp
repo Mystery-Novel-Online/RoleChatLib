@@ -1,6 +1,7 @@
 #include "rolechat/filesystem/RCDir.h"
 #include "rolechat/util/FileSystem.h"
 #include <filesystem>
+#include <algorithm>
 
 using namespace rolechat::fs;
 
@@ -19,7 +20,7 @@ std::string RCDir::findFirst() const
     {
         for (const auto& packageName : PackageManager::packageNames()) 
         {
-            auto disabled = PackageManager::disabledList();
+            std::vector<std::string> disabled = PackageManager::disabledList();
             if (std::find(disabled.begin(), disabled.end(), packageName) == disabled.end()) 
             {
                 for (const auto& candidate : m_filePathList) 
