@@ -23,6 +23,7 @@ public:
     virtual void load(const std::string& folder, const std::string& path) = 0;
     virtual void reload() {}
 
+    virtual std::unordered_map<std::string, actor::ActorOutfit*> outfits() const {return {};}
     virtual std::string outfit()    const { return m_currentOutfit; }
     virtual std::string folder()    const { return m_folder; }
     virtual std::string showname()  const { return m_showname.empty() ? m_folder : m_showname;}
@@ -38,6 +39,7 @@ public:
     virtual std::string buttonImage(const ActorEmote& emote, bool enabled) const;
     virtual std::string selectedImage(const ActorEmote& emote) const;
 
+    
     virtual void switchOutfit(const std::string& outfit) { m_currentOutfit = outfit; }
     virtual void setFolder(const std::string& folder) { m_folder = folder; }
     virtual void setPath(const std::string& path) { m_path = path; }
@@ -46,6 +48,7 @@ public:
     virtual void setSide(const std::string& side) {m_side = side;}
     virtual void setScalingMode(const std::string& mode) {m_scalingMode = mode;}
     virtual void setScalingPresets(std::vector<ActorScalingPreset> presets) { m_presets = presets; }
+
 
 private:
     std::vector<ActorEmote> m_emotes = {};

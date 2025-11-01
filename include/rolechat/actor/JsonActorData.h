@@ -17,6 +17,7 @@ public:
     void load(const std::string& folder, const std::string& path) override;
     void reload() override;
 
+    std::unordered_map<std::string, actor::ActorOutfit*> outfits() const override {return m_outfits; }
     std::string showname() const override;
     std::vector<std::string> outfitNames() const override { return m_outfitNames; }
     std::vector<ActorEmote> emotes() override;
