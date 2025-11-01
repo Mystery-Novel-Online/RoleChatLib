@@ -16,6 +16,6 @@ struct ActorLayer
     std::string toggleName;
     std::string assetPath;
 
-    bool defaultDisabled = false;
+    bool defaultDisabled;
     std::vector<std::string> variationOptions = {};
 };

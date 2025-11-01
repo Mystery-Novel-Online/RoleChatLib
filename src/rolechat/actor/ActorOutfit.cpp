@@ -52,7 +52,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
             }
         }
 
-        layer.defaultDisabled = obj.value("toggled_disabled", false);
+        layer.defaultDisabled = obj.value("toggle_disabled", false);
         layer.toggleName = obj.value("toggle", "");
 
         m_layers.push_back(layer);
