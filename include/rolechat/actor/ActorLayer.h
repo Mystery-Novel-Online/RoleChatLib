@@ -15,4 +15,7 @@ struct ActorLayer
     std::string blendMode;
     std::string toggleName;
     std::string assetPath;
+
+    bool defaultDisabled = false;
+    std::vector<std::string> variationOptions = {};
 };

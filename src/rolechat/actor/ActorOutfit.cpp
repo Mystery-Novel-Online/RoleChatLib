@@ -32,7 +32,27 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
 
         layer.offsetName = obj.value("name", "");
         layer.spriteOrder = obj.value("order", "");
-        layer.layerOffset = {obj["offset"].value("x", 0), obj["offset"].value("y", 0), obj["offset"].value("width", 0), obj["offset"].value("height", 0)}; 
+        
+        layer.layerOffset = 
+        {
+            obj["offset"].value("x", 0), 
+            obj["offset"].value("y", 0), 
+            obj["offset"].value("width", 0), 
+            obj["offset"].value("height", 0) 
+        };
+
+        
+        layer.variationOptions.clear();
+        if (obj.contains("variations") && obj["variations"].is_array()) 
+        {
+            for (const auto& val : obj["variations"]) 
+            {
+                if (val.is_string())
+                    layer.variationOptions.push_back(val.get<std::string>());
+            }
+        }
+
+        layer.defaultDisabled = obj.value("toggled_disabled", false);
         layer.toggleName = obj.value("toggle", "");
 
         m_layers.push_back(layer);
