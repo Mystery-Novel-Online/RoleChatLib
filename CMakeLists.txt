@@ -18,8 +18,11 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(nlohmann_json)
 
+FetchContent_Declare(sqlite3 GIT_REPOSITORY https://github.com/sjinks/sqlite3-cmake GIT_TAG v3.49.1)
+FetchContent_MakeAvailable(sqlite3)
+
 add_library(rolechat-lib ${PARAM_SOURCES} ${PARAM_HEADERS})
-target_link_libraries(rolechat-lib PUBLIC nlohmann_json::nlohmann_json)
+target_link_libraries(rolechat-lib PUBLIC nlohmann_json::nlohmann_json SQLite::SQLite3)
 target_include_directories(rolechat-lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> )
 
 # Test Executable
