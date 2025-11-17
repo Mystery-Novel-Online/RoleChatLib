@@ -16,6 +16,8 @@ public:
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByLastUsed();
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByUsage();
 
+    bool cacheContentData(const std::string& guid, const std::string& folder, const int lastUpdated, const int contentId);
+
 private:
     sqlite3* db = nullptr;
 };

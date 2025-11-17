@@ -10,10 +10,11 @@ CREATE TABLE IF NOT EXISTS character_usage (
 )";
 
 static const char* CREATE_CACHE_TABLE = R"(
-CREATE TABLE IF NOT EXISTS cache (
-    key TEXT PRIMARY KEY,
-    value TEXT,
-    timestamp INTEGER
+CREATE TABLE IF NOT EXISTS workshop_data (
+    guid TEXT PRIMARY KEY,
+    folder TEXT,
+    last_updated INTEGER DEFAULT 0,
+    content_id INTEGER
 );
 )";
 
@@ -135,4 +136,31 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
 
   sqlite3_finalize(stmt);
   return results;
+}
+
+bool RolechatDatabase::cacheContentData(const std::string &guid, const std::string &folder, const int lastUpdated, const int contentId)
+{
+  if (!db) return false;
+
+  const char* sql = R"(
+        INSERT INTO workshop_data (guid, folder, last_updated, content_id)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(guid) DO UPDATE SET
+            folder = excluded.folder,
+            last_updated = excluded.last_updated,
+            content_id = excluded.content_id;
+    )";
+
+  sqlite3_stmt* stmt = nullptr;
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    return false;
+
+  sqlite3_bind_text(stmt, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(stmt, 2, folder.c_str(), -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(stmt, 3, lastUpdated);
+  sqlite3_bind_int(stmt, 4, contentId);
+
+  bool ok = (sqlite3_step(stmt) == SQLITE_DONE);
+  sqlite3_finalize(stmt);
+  return ok;
 }
