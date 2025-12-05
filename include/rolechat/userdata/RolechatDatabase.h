@@ -16,6 +16,9 @@ public:
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByLastUsed();
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByUsage();
 
+    std::string workshopGuid(std::string folderName);
+    int workshopUpdateTime(std::string folderName);
+
     bool cacheContentData(const std::string& guid, const std::string& folder, const int lastUpdated, const int contentId);
 
 private:

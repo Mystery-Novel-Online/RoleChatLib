@@ -164,3 +164,52 @@ bool RolechatDatabase::cacheContentData(const std::string &guid, const std::stri
   sqlite3_finalize(stmt);
   return ok;
 }
+
+std::string RolechatDatabase::workshopGuid(std::string folderName)
+{
+  if (!db) return "";
+
+  const char* sql = R"(
+        SELECT guid
+        FROM workshop_data
+        WHERE folder = ?;
+    )";
+
+  sqlite3_stmt* stmt = nullptr;
+  sqlite3_bind_text(stmt, 1, folderName.c_str(), -1, SQLITE_TRANSIENT);
+
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    return "";
+  std::string guid = "";
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    guid = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+  }
+
+  sqlite3_finalize(stmt);
+  return guid;
+}
+
+int RolechatDatabase::workshopUpdateTime(std::string folderName)
+{
+  if (!db) return 0;
+
+  const char* sql = R"(
+        SELECT last_updated
+        FROM workshop_data
+        WHERE folder = ?;
+    )";
+
+  sqlite3_stmt* stmt = nullptr;
+
+  sqlite3_bind_text(stmt, 1, folderName.c_str(), -1, SQLITE_TRANSIENT);
+
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    return 0;
+  int lastUpdated = 0;
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    lastUpdated = sqlite3_column_int64(stmt, 0);
+  }
+
+  sqlite3_finalize(stmt);
+  return lastUpdated;
+}
