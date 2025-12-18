@@ -32,6 +32,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
 
         layer.offsetName = obj.value("name", "");
         layer.spriteOrder = obj.value("order", "");
+        layer.blendMode = obj.value("blend_mode", "");
         
         layer.layerOffset = 
         {
