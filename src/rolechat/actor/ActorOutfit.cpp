@@ -33,23 +33,27 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
         layer.offsetName = obj.value("name", "");
         layer.spriteOrder = obj.value("order", "");
         layer.blendMode = obj.value("blend_mode", "");
-        
-        layer.layerOffset = 
+
+        if(obj.contains("offset"))
         {
-            obj["offset"].value("x", 0), 
-            obj["offset"].value("y", 0), 
-            obj["offset"].value("width", 0), 
-            obj["offset"].value("height", 0) 
-        };
+          layer.layerOffset =
+          {
+              obj["offset"].value("x", 0),
+              obj["offset"].value("y", 0),
+              obj["offset"].value("width", 0),
+              obj["offset"].value("height", 0)
+          };
+        }
 
         
         layer.variationOptions.clear();
+        std::string imagePrefix = layer.offsetName == "base_image" ? "outfits/" + outfit + "/" : "";
         if (obj.contains("variations") && obj["variations"].is_array()) 
         {
             for (const auto& val : obj["variations"]) 
             {
                 if (val.is_string())
-                    layer.variationOptions.push_back(val.get<std::string>());
+                    layer.variationOptions.push_back(imagePrefix + val.get<std::string>());
             }
         }
 
@@ -107,15 +111,24 @@ void ActorOutfit::readEmotes(const JsonData& data)
 
         for (const ActorLayer& layer : m_layers)
         {
+          if(layer.offsetName == "base_image")
+          {
+            ActorLayer newLayer = layer;
+            newLayer.spriteName = emote.dialog;
+            emote.emoteOverlays.push_back(newLayer);
+          }
+          else
+          {
             auto it = emoteData.find(layer.offsetName);
             if (it != emoteData.end() && it->is_string()) {
-                std::string overlayImage = it->get<std::string>();
-                if (!overlayImage.empty()) {
-                    ActorLayer newLayer = layer;
-                    newLayer.spriteName = overlayImage;
-                    emote.emoteOverlays.push_back(newLayer);
-                }
+              std::string overlayImage = it->get<std::string>();
+              if (!overlayImage.empty()) {
+                ActorLayer newLayer = layer;
+                newLayer.spriteName = overlayImage;
+                emote.emoteOverlays.push_back(newLayer);
+              }
             }
+          }
         }
 
         m_emotes.push_back(emote);
