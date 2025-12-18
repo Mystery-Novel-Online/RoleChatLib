@@ -8,5 +8,6 @@ struct ActorScalingPreset
   std::string name = "Preset";
   int verticalAlign = 0;
   int scale = 1000;
+  int horizontalAlign = 0;
 };
 }

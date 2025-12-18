@@ -38,6 +38,8 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
                 if (obj.contains("name")) {
                     ActorScalingPreset preset;
                     preset.name = obj["name"].get<std::string>();
+                    if (obj.contains("horizontal"))
+                      preset.horizontalAlign = obj["horizontal"].get<int>();
                     if (obj.contains("vertical"))
                         preset.verticalAlign = obj["vertical"].get<int>();
                     if (obj.contains("scale"))
