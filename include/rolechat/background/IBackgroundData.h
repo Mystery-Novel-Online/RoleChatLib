@@ -10,15 +10,16 @@ namespace rolechat::background {
 
 class IBackgroundData {
 public:
-    IBackgroundData() = default;
+  IBackgroundData() = default;
 
-    void assignPosition(const std::string& position, BackgroundPosition data);
-    std::string backgroundFilename(const std::string& position);
-    std::string foregroundFilename(const std::string& position);
+  void assignPosition(const std::string& variant, const std::string& position, BackgroundPosition data);
+  std::string backgroundFilename(const std::string& position);
+  std::string foregroundFilename(const std::string& position);
 
-    virtual void loadBackground(const std::string& backgroundPath) = 0;
+  virtual void loadBackground(const std::string& backgroundPath) = 0;
 private:
-    std::unordered_map<std::string, BackgroundPosition> m_backgroundPositions;
+  std::unordered_map<std::string, std::unordered_map<std::string, BackgroundPosition>> m_backgroundPositions;
+  std::string m_currentVariant = "";
 };
 
 } 

@@ -16,13 +16,13 @@ void JsonBackgroundData::loadBackground(const std::string &backgroundPath)
         std::cerr << "Invalid JSON data in file: " << backgroundPath << "\n";
         return;
     }
-
-    for (auto& [key, pos] : j["positions"].items()) 
+    j.items();
+    for (auto& [variantName, variantData] : j.items())
     {
-        assignPosition(key, { pos["background"].get<std::string>(), pos["foreground"].get<std::string>() });
-        std::cout << "Position key: " << key
-                  << ", background: " << backgroundFilename(key)
-                  << ", foreground: " << foregroundFilename(key) << "\n";
+      for (auto& [key, pos] : variantData["positions"].items())
+      {
+        assignPosition(variantName, key, { pos["background"].get<std::string>(), pos["foreground"].get<std::string>() });
+      }
     }
 
 }

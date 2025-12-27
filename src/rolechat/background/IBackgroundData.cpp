@@ -2,24 +2,29 @@
 
 using namespace rolechat::background;
 
-void IBackgroundData::assignPosition(const std::string & position, BackgroundPosition data)
+void IBackgroundData::assignPosition(const std::string& variant, const std::string & position, BackgroundPosition data)
 {
-    m_backgroundPositions[position] = data;
+  if(m_currentVariant.empty()) m_currentVariant = variant;
+    m_backgroundPositions[variant][position] = data;
 }
 
 std::string IBackgroundData::backgroundFilename(const std::string &position)
 {
-    if (m_backgroundPositions.find(position) != m_backgroundPositions.end()) {
-        return m_backgroundPositions[position].background;
+    if (m_backgroundPositions.find(m_currentVariant) != m_backgroundPositions.end()) {
+      if (m_backgroundPositions[m_currentVariant].find(position) != m_backgroundPositions[m_currentVariant].end()) {
+        return m_backgroundPositions[m_currentVariant][position].background;
+      }
     } else {
         return "";
     }
 }
 std::string IBackgroundData::foregroundFilename(const std::string &position)
 {
-    if (m_backgroundPositions.find(position) != m_backgroundPositions.end()) {
-        return m_backgroundPositions[position].foreground;
-    } else {
+  if (m_backgroundPositions.find(m_currentVariant) != m_backgroundPositions.end()) {
+    if (m_backgroundPositions[m_currentVariant].find(position) != m_backgroundPositions[m_currentVariant].end()) {
+      return m_backgroundPositions[m_currentVariant][position].foreground;
+    }
+  } else {
         return "";
     }
 }
