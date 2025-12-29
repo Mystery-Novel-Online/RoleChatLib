@@ -13,6 +13,7 @@ public:
   IBackgroundData() = default;
 
   void assignPosition(const std::string& variant, const std::string& position, BackgroundPosition data);
+  void setVariant(const std::string& variant);
   std::string backgroundFilename(const std::string& position);
   std::string foregroundFilename(const std::string& position);
 
@@ -20,6 +21,7 @@ public:
 private:
   std::unordered_map<std::string, std::unordered_map<std::string, BackgroundPosition>> m_backgroundPositions;
   std::string m_currentVariant = "";
+  std::string m_defaultVariant = "";
 };
 
 } 
