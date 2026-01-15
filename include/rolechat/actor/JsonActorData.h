@@ -28,6 +28,7 @@ public:
     void switchOutfit(const std::string& outfit) override;
 
 private:
+    bool m_validCharacter = false;
     std::unordered_map<std::string, actor::ActorOutfit*> m_outfits = {};
     std::vector<std::string> m_outfitNames = {};
     std::vector<std::string> m_outfitsOrder = {};

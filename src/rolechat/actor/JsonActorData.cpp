@@ -11,8 +11,12 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
     setFolder(folder);
     setPath(path);
 
-    bool validJson = false;
-    JsonData jsonData = JsonUtils::loadFile(path + "/char.json", validJson); 
+    JsonData jsonData = JsonUtils::loadFile(path + "/char.json", m_validCharacter);
+
+    if(!m_validCharacter)
+    {
+      return;
+    }
 
     setShowname(jsonData.value("showname", ""));
     setGender(jsonData.value("gender", ""));
@@ -59,7 +63,10 @@ void JsonActorData::reload()
     namespace fs = std::filesystem;
     m_outfitNames.clear();
 
-    std::string actorPath = path(); 
+    std::string actorPath = path();
+    if(!m_validCharacter)
+      return;
+
     std::string outfitPath = actorPath + "/outfits";
 
     // List subdirectories in outfitPath
