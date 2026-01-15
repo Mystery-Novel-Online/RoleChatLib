@@ -57,6 +57,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
             }
         }
 
+        layer.globalSelection = obj.value("selection_global", false);
         layer.defaultDisabled = obj.value("toggle_disabled", false);
         layer.toggleName = obj.value("toggle", "");
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "rolechat/math/RPRect.h"
 
 struct ActorLayer
@@ -18,4 +19,5 @@ struct ActorLayer
 
     bool defaultDisabled;
     std::vector<std::string> variationOptions = {};
+    bool globalSelection;
 };
