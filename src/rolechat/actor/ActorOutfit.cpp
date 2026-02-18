@@ -18,6 +18,17 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
     if(!validJson)
         return;
     
+    if(jsonData.contains("side"))
+    {
+      m_position.emplace(jsonData.value("side", "wit"));
+    }
+    else if(jsonData.contains("position"))
+    {
+      m_position.emplace(jsonData.value("position", "wit"));
+    }
+
+
+
     m_showname = jsonData.value("showname", "");
 
     m_showDesk = jsonData["default_rules"].value("show_desk", true);
@@ -65,6 +76,11 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
     }
 
     readEmotes(jsonData);
+}
+
+std::optional<std::string>& ActorOutfit::position()
+{
+  return m_position;
 }
 
 void ActorOutfit::readEmotes(const JsonData& data)

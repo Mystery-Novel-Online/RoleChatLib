@@ -19,6 +19,7 @@ public:
 
     std::unordered_map<std::string, actor::ActorOutfit*> outfits() const override {return m_outfits; }
     std::string showname() const override;
+    std::string side() const override;
     std::vector<std::string> outfitNames() const override { return m_outfitNames; }
     std::vector<ActorEmote> emotes() override;
 

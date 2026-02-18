@@ -140,6 +140,14 @@ std::string JsonActorData::showname() const
     return outfitShowname.empty() ? IActorData::showname() : outfitShowname;
 }
 
+std::string JsonActorData::side() const
+{
+  const std::string& currentOutfit = outfit();
+  auto it = m_outfits.find(currentOutfit);
+  if (it == m_outfits.end() || !it->second) return IActorData::side();
+  return it->second->position().has_value() ? it->second->position().value() : IActorData::side();
+}
+
 std::vector<ActorEmote> JsonActorData::emotes()
 {
     const std::string& currentOutfit = outfit();

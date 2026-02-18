@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <string>
 #include "rolechat/actor/ActorEmote.h"
 #include "rolechat/util/JsonUtils.h"
@@ -13,6 +14,8 @@ public:
     void setShowname(const std::string& showname) { m_showname = showname;};
     std::string showname() { return m_showname;};
 
+    std::optional<std::string>& position();
+
     const std::vector<ActorEmote>& emotes() const noexcept { return m_emotes; }
     const std::vector<ActorLayer>& layers() const noexcept { return m_layers; }
 
@@ -23,6 +26,8 @@ private:
     std::string m_character = "";
     std::string m_showname = "";
     std::string m_path = "";
+
+    std::optional<std::string> m_position;
 
     bool m_showDesk = true;
     bool m_ignoreOffsets = false;
