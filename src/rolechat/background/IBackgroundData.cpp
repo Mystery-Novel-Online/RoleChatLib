@@ -34,7 +34,7 @@ std::string IBackgroundData::backgroundFilename(const std::string &position)
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    const auto defaultPosIt = positions.find("default");
+    const auto defaultPosIt = positions.find("Default");
     if(defaultPosIt != positions.end())
     {
       return defaultPosIt->second.background;
@@ -55,7 +55,7 @@ std::string IBackgroundData::foregroundFilename(const std::string &position)
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    const auto defaultPosIt = positions.find("default");
+    const auto defaultPosIt = positions.find("Default");
     if(defaultPosIt != positions.end())
     {
       return defaultPosIt->second.foreground;
