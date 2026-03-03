@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "rolechat/userdata/SQLTable.h"
+#include <rolechat/userdata/SQLStmt.h>
 
 static SQLTable CHARACTER_USAGE_TABLE =
     SQLTable("character_usage")
@@ -232,4 +233,20 @@ int RolechatDatabase::workshopUpdateTime(std::string folderName)
 
   sqlite3_finalize(stmt);
   return lastUpdated;
+}
+
+std::vector<MountedDirectory> RolechatDatabase::mountedDirectories(bool excludeInactive)
+{
+  std::vector<MountedDirectory> results;
+
+  SQLSelect select = MOUNTED_FOLDERS_TABLE.select();
+  if(excludeInactive)
+    select.where("active_state = 1");
+
+  SQLStmt stmt = select.prepare(db);
+
+  while (stmt.step())
+    results.push_back({stmt.text(0), stmt.integer(1) == 1});
+
+  return results;
 }

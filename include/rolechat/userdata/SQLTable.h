@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "rolechat/userdata/SQLColumn.h"
+#include "rolechat/userdata/SQLSelect.h"
 
 class SQLTable {
 public:
@@ -34,6 +35,19 @@ public:
     return *this;
   }
 
+
+  std::vector<std::string> columnNames() const {
+    std::vector<std::string> names;
+    for (const auto& col : m_columns) names.push_back(col.);
+    return names;
+  }
+
+
+  SQLSelect select() const {
+    SQLSelect sel(m_name);
+    sel.columns(columnNames()); // default: select all columns
+    return sel;
+  }
 
   std::string build() const {
     std::stringstream ss;

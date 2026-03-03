@@ -28,6 +28,10 @@ public:
 
     bool cacheContentData(const std::string& guid, const std::string& folder, const int lastUpdated, const int contentId);
 
+
+    //Mounted Directories
+    std::vector<MountedDirectory> mountedDirectories(bool excludeInactive = false);
+
 private:
     sqlite3* db = nullptr;
 };
