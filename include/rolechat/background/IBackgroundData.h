@@ -17,6 +17,11 @@ public:
   std::string backgroundFilename(const std::string& position);
   std::string foregroundFilename(const std::string& position);
 
+  std::vector<std::string> variantsList();
+  std::vector<std::string> positionsList();
+  std::vector<std::string> positionsList(const std::string& variant);
+
+
   virtual void loadBackground(const std::string& backgroundPath) = 0;
 private:
   std::unordered_map<std::string, std::unordered_map<std::string, BackgroundPosition>> m_backgroundPositions;

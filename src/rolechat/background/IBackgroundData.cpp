@@ -65,3 +65,40 @@ std::string IBackgroundData::foregroundFilename(const std::string &position)
 
   return posIt->second.foreground;
 }
+
+std::vector<std::string> IBackgroundData::variantsList()
+{
+  std::vector<std::string> variants;
+  variants.reserve(m_backgroundPositions.size());
+
+  for (const auto& [variant, _] : m_backgroundPositions)
+  {
+    variants.push_back(variant);
+  }
+
+  return variants;
+}
+
+std::vector<std::string> IBackgroundData::positionsList()
+{
+  return positionsList(m_currentVariant);
+}
+
+std::vector<std::string> IBackgroundData::positionsList(const std::string &variant)
+{
+  std::vector<std::string> positions;
+
+  const auto variantIt = m_backgroundPositions.find(variant);
+  if (variantIt == m_backgroundPositions.end())
+    return positions;
+
+  const auto& positionMap = variantIt->second;
+  positions.reserve(positionMap.size());
+
+  for (const auto& [position, _] : positionMap)
+  {
+    positions.push_back(position);
+  }
+
+  return positions;
+}
