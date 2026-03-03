@@ -4,6 +4,12 @@
 #include <sqlite3.h>
 #include <vector>
 
+struct MountedDirectory
+{
+  std::string directory;
+  bool active;
+};
+
 class RolechatDatabase {
 public:
     RolechatDatabase();
@@ -15,6 +21,7 @@ public:
     bool incrementCharacterUsage(const std::string& character);
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByLastUsed();
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByUsage();
+
 
     std::string workshopGuid(std::string folderName);
     int workshopUpdateTime(std::string folderName);

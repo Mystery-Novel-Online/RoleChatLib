@@ -1,22 +1,26 @@
 #include "rolechat/userdata/RolechatDatabase.h "
 #include <iostream>
 
-static const char* CREATE_CHARACTER_USAGE_TABLE = R"(
-CREATE TABLE IF NOT EXISTS character_usage (
-    character TEXT PRIMARY KEY,
-    uses INTEGER DEFAULT 0,
-    last_used INTEGER DEFAULT 0
-);
-)";
+#include "rolechat/userdata/SQLTable.h"
 
-static const char* CREATE_CACHE_TABLE = R"(
-CREATE TABLE IF NOT EXISTS workshop_data (
-    guid TEXT PRIMARY KEY,
-    folder TEXT,
-    last_updated INTEGER DEFAULT 0,
-    content_id INTEGER
-);
-)";
+static SQLTable CHARACTER_USAGE_TABLE =
+    SQLTable("character_usage")
+      .text("character").notNull().unique().primaryKey().done()
+      .integer("uses").defaultValue(0).done()
+      .integer("last_used").defaultValue(0).done();
+
+
+static SQLTable WORKSHOP_DATA_TABLE =
+    SQLTable("workshop_data")
+        .text("guid").notNull().unique().primaryKey().done()
+        .text("folder").done()
+        .integer("last_updated").defaultValue(0).done()
+        .integer("content_id").defaultValue(-1).done();
+
+static SQLTable MOUNTED_FOLDERS_TABLE =
+    SQLTable("mounted_directories")
+        .text("directory").notNull().unique().primaryKey().done()
+        .integer("active_state").defaultValue(1).done();
 
 RolechatDatabase::RolechatDatabase() {
     std::string fullPath = "base/configs/user_data.db";
@@ -39,9 +43,20 @@ RolechatDatabase::~RolechatDatabase() {
 
 bool RolechatDatabase::initTables() 
 {
-    if (!exec(CREATE_CHARACTER_USAGE_TABLE)) return false;
-    if (!exec(CREATE_CACHE_TABLE)) return false;
-    return true;
+  std::vector<std::string> statements = {
+      CHARACTER_USAGE_TABLE.build(),
+      WORKSHOP_DATA_TABLE.build(),
+      MOUNTED_FOLDERS_TABLE.build()
+  };
+
+  for (const auto& sql : statements)
+  {
+    std::cout << sql << std::endl;
+    if (!exec(sql))
+      return false;
+  }
+
+  return true;
 }
 
 bool RolechatDatabase::exec(const std::string& sql) {
