@@ -25,21 +25,43 @@ void IBackgroundData::setVariant(const std::string &variant)
 
 std::string IBackgroundData::backgroundFilename(const std::string &position)
 {
-    if (m_backgroundPositions.find(m_currentVariant) != m_backgroundPositions.end()) {
-      if (m_backgroundPositions[m_currentVariant].find(position) != m_backgroundPositions[m_currentVariant].end()) {
-        return m_backgroundPositions[m_currentVariant][position].background;
-      }
-    } else {
-        return "";
+  const auto variantIt = m_backgroundPositions.find(m_currentVariant);
+  if (variantIt == m_backgroundPositions.end())
+    return {};
+
+  const auto& positions = variantIt->second;
+
+  const auto posIt = positions.find(position);
+  if (posIt == positions.end())
+  {
+    const auto defaultPosIt = positions.find("default");
+    if(defaultPosIt != positions.end())
+    {
+      return defaultPosIt->second.background;
     }
+    return {};
+  }
+
+  return posIt->second.background;
+
 }
 std::string IBackgroundData::foregroundFilename(const std::string &position)
 {
-  if (m_backgroundPositions.find(m_currentVariant) != m_backgroundPositions.end()) {
-    if (m_backgroundPositions[m_currentVariant].find(position) != m_backgroundPositions[m_currentVariant].end()) {
-      return m_backgroundPositions[m_currentVariant][position].foreground;
+  const auto variantIt = m_backgroundPositions.find(m_currentVariant);
+  if (variantIt == m_backgroundPositions.end())
+    return {};
+
+  const auto& positions = variantIt->second;
+  const auto posIt = positions.find(position);
+  if (posIt == positions.end())
+  {
+    const auto defaultPosIt = positions.find("default");
+    if(defaultPosIt != positions.end())
+    {
+      return defaultPosIt->second.foreground;
     }
-  } else {
-        return "";
-    }
+    return {};
+  }
+
+  return posIt->second.foreground;
 }
