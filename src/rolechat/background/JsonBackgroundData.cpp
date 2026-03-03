@@ -19,9 +19,21 @@ void JsonBackgroundData::loadBackground(const std::string &backgroundPath)
     j.items();
     for (auto& [variantName, variantData] : j.items())
     {
-      for (auto& [key, pos] : variantData["positions"].items())
+      if(variantData.contains("background"))
       {
-        assignPosition(variantName, key, { pos["background"].get<std::string>(), pos["foreground"].get<std::string>() });
+        std::string defaultBg = variantData.value("background", "");
+        std::string defaultForeground = variantData.value("foreground", "");
+        assignPosition(variantName, "default", { defaultBg, defaultForeground });
+      }
+
+      if(variantData.contains("positions") && variantData["positions"].is_array())
+      {
+        for (auto& [key, pos] : variantData["positions"].items())
+        {
+          std::string background = pos.value("background", "");
+          std::string foreground = pos.value("foreground", "");
+          assignPosition(variantName, key, { background, foreground });
+        }
       }
     }
 
