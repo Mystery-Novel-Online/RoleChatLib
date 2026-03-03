@@ -61,6 +61,9 @@ bool RolechatDatabase::exec(const std::string& sql) {
 
 bool RolechatDatabase::incrementCharacterUsage(const std::string &character)
 {
+  if(character.empty())
+    return false;
+
   if (!db) return false;
 
   const char* sql = R"(
