@@ -52,7 +52,7 @@ std::string RCFile::findFirst() const
             }
         }
 
-        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories(true))
         {
           for (const auto& candidate : candidates)
           {
@@ -103,7 +103,7 @@ std::vector<std::string> RCFile::findAll() const
     }
 
 
-    for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+    for(const auto& mounted : RolechatDatabase::instance().mountedDirectories(true))
     {
       for (const auto& candidate : candidates)
       {

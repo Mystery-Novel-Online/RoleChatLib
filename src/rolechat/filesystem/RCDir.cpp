@@ -34,7 +34,7 @@ std::string RCDir::findFirst() const
         }
 
 
-        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories(true))
         {
           for (const auto& candidate : m_filePathList)
           {
@@ -79,7 +79,7 @@ std::vector<std::string> RCDir::findAll() const
             }
         }
 
-        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories(true))
         {
           for (const auto& candidate : m_filePathList)
           {
