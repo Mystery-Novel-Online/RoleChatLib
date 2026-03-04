@@ -23,6 +23,14 @@ static SQLTable MOUNTED_FOLDERS_TABLE =
         .text("directory").notNull().unique().primaryKey().done()
         .integer("active_state").defaultValue(1).done();
 
+
+static SQLTable WORKSHOP_BACKGROUNDS_TABLE =
+    SQLTable("workshop_backgrounds")
+        .text("guid").notNull().unique().primaryKey().done()
+        .text("folder").done()
+        .integer("last_updated").defaultValue(0).done();
+
+
 RolechatDatabase::RolechatDatabase() {
     std::string fullPath = "base/configs/user_data.db";
     if (sqlite3_open(fullPath.c_str(), &db) != SQLITE_OK) {
@@ -47,7 +55,8 @@ bool RolechatDatabase::initTables()
   std::vector<std::string> statements = {
       CHARACTER_USAGE_TABLE.build(),
       WORKSHOP_DATA_TABLE.build(),
-      MOUNTED_FOLDERS_TABLE.build()
+      MOUNTED_FOLDERS_TABLE.build(),
+      WORKSHOP_BACKGROUNDS_TABLE.build()
   };
 
   for (const auto& sql : statements)
