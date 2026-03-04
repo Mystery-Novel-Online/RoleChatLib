@@ -29,7 +29,7 @@ public:
     return m_name + " " + m_type + m_constraints;
   }
 
-  std::string name() { return m_name; }
+  std::string name() const { return m_name; }
 private:
   SQLTable* m_table;
   std::string m_name;

@@ -38,7 +38,10 @@ public:
 
   std::vector<std::string> columnNames() const {
     std::vector<std::string> names;
-    for (const auto& col : m_columns) names.push_back(col.);
+    for (auto& col : m_columns)
+    {
+      names.push_back(col.name());
+    }
     return names;
   }
 

@@ -2,6 +2,7 @@
 #include "rolechat/util/FileSystem.h"
 #include <filesystem>
 #include <algorithm>
+#include <rolechat/userdata/RolechatDatabase.h>
 
 using namespace rolechat::fs;
 
@@ -31,7 +32,21 @@ std::string RCDir::findFirst() const
                 }
             }
         }
+
+
+        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+        {
+          for (const auto& candidate : m_filePathList)
+          {
+            std::string packagePath = mounted.directory + "/" + candidate;
+            if (exists(packagePath))
+              return packagePath;
+          }
+        }
+
     }
+
+
 
     for (const auto& candidate : m_filePathList) 
     {
@@ -63,7 +78,19 @@ std::vector<std::string> RCDir::findAll() const
                 }
             }
         }
+
+        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+        {
+          for (const auto& candidate : m_filePathList)
+          {
+            std::string packagePath = mounted.directory + "/" + candidate;
+            if (!exists(packagePath))
+              continue;
+            result.push_back(packagePath);
+          }
+        }
     }
+
 
     for (const auto& candidate : m_filePathList) 
     {
@@ -72,6 +99,8 @@ std::vector<std::string> RCDir::findAll() const
             continue;
         result.push_back(baseDir);
     }
+
+
 
     return result;
 }
@@ -185,7 +214,7 @@ std::string RCDir::applicationPath()
     for (int i = 0; i < 3; ++i)
         path = path.parent_path();
 #endif
-    return path.string();
+    return path.generic_string();
 }
 
 std::string RCDir::basePath()

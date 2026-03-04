@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <algorithm>
+#include <rolechat/userdata/RolechatDatabase.h>
 
 using namespace rolechat::fs;
 
@@ -50,6 +51,17 @@ std::string RCFile::findFirst() const
                 }
             }
         }
+
+        for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+        {
+          for (const auto& candidate : candidates)
+          {
+            std::string packagePath = mounted.directory + "/" + candidate;
+            if (exists(packagePath))
+              return packagePath;
+          }
+        }
+
     }
 
     for (const auto& candidate : candidates) 
@@ -88,6 +100,17 @@ std::vector<std::string> RCFile::findAll() const
                     results.push_back(packagePath);
             }
         }
+    }
+
+
+    for(const auto& mounted : RolechatDatabase::instance().mountedDirectories())
+    {
+      for (const auto& candidate : candidates)
+      {
+        std::string packagePath = mounted.directory + "/" + candidate;
+        if (exists(packagePath))
+          results.push_back(packagePath);
+      }
     }
 
     for (const auto& candidate : candidates) {

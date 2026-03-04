@@ -12,6 +12,9 @@ struct MountedDirectory
 
 class RolechatDatabase {
 public:
+
+    static RolechatDatabase& instance();
+
     RolechatDatabase();
     ~RolechatDatabase();
 

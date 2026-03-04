@@ -250,3 +250,9 @@ std::vector<MountedDirectory> RolechatDatabase::mountedDirectories(bool excludeI
 
   return results;
 }
+
+RolechatDatabase &RolechatDatabase::instance()
+{
+  static RolechatDatabase instance;
+  return instance;
+}
