@@ -291,3 +291,16 @@ void RolechatDatabase::removeMount(const std::string &path)
   stmt.bind(1, path);
   stmt.step();
 }
+
+WorkshopData RolechatDatabase::searchContentGuid(const std::string &guid)
+{
+  SQLStmt stmt = WORKSHOP_DATA_TABLE.select()
+      .where("guid = '" + guid + "'")
+      .prepare(db);
+
+  if(stmt.step())
+    return {stmt.text(0), stmt.text(1), stmt.integer(2), stmt.integer(3)};
+
+  return{};
+
+}

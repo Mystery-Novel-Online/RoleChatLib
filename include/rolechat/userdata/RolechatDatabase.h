@@ -5,6 +5,20 @@
 #include <vector>
 #include <mutex>
 
+struct WorkshopData
+{
+
+  const std::string downloadUri()
+  {
+    return "api/workshop/"+ guid +"/content";
+  };
+
+  std::string guid;
+  std::string folder;
+  int lastUpdated;
+  int content_id;
+};
+
 struct MountedDirectory
 {
   std::string directory;
@@ -26,6 +40,8 @@ public:
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByLastUsed();
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByUsage();
 
+
+    WorkshopData searchContentGuid(const std::string& guid);
 
     std::string workshopGuid(std::string folderName);
     int workshopUpdateTime(std::string folderName);

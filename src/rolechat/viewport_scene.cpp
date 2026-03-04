@@ -35,8 +35,11 @@ std::string ViewportScene::backgroundFile(const std::string &position)
 
   const std::string& name = m_backgroundName.value();
 
-  ApplicationFile bgFile("background/" + name + "/" + m_sceneBackground.value()->backgroundFilename(position));
-  return bgFile.findFirst();
+  std::string fileName = m_sceneBackground.value()->backgroundFilename(position);
+  ApplicationFile bgFile("background/" + name + "/" + fileName);
+
+  std::string firstFile = bgFile.findFirst();
+  return firstFile;
 }
 
 std::string ViewportScene::foregroundFile(const std::string &position)
