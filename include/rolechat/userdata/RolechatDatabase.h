@@ -3,6 +3,7 @@
 #include <string>
 #include <sqlite3.h>
 #include <vector>
+#include <mutex>
 
 struct MountedDirectory
 {
@@ -33,8 +34,11 @@ public:
 
 
     //Mounted Directories
+    void toggleMount(const std::string& path, bool active);
+    void removeMount(const std::string& path);
     std::vector<MountedDirectory> mountedDirectories(bool excludeInactive = false);
 
 private:
+    std::mutex m_mutex;
     sqlite3* db = nullptr;
 };

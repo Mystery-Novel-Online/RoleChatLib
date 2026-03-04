@@ -237,6 +237,7 @@ int RolechatDatabase::workshopUpdateTime(std::string folderName)
 
 std::vector<MountedDirectory> RolechatDatabase::mountedDirectories(bool excludeInactive)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<MountedDirectory> results;
 
   SQLSelect select = MOUNTED_FOLDERS_TABLE.select();
@@ -255,4 +256,29 @@ RolechatDatabase &RolechatDatabase::instance()
 {
   static RolechatDatabase instance;
   return instance;
+}
+
+void RolechatDatabase::toggleMount(const std::string &path, bool active)
+{
+  SQLStmt stmt(db, R"(
+        INSERT INTO mounted_directories (directory, active_state)
+        VALUES (?, ?)
+        ON CONFLICT(directory) DO UPDATE SET
+            active_state = excluded.active_state
+    )");
+
+  stmt.bind(1, path);
+  stmt.bind(2, active);
+  stmt.step();
+}
+
+void RolechatDatabase::removeMount(const std::string &path)
+{
+  SQLStmt stmt(db, R"(
+        DELETE FROM mounted_directories
+        WHERE directory = ?
+    )");
+
+  stmt.bind(1, path);
+  stmt.step();
 }
