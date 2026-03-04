@@ -1,5 +1,7 @@
 #include "rolechat/background/IBackgroundData.h"
 
+#include <random>
+
 using namespace rolechat::background;
 
 void IBackgroundData::assignPosition(const std::string& variant, const std::string & position, BackgroundPosition data)
@@ -34,7 +36,8 @@ std::string IBackgroundData::backgroundFilename(const std::string &position)
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    const auto defaultPosIt = positions.find("Default");
+    std::string defaultPosition = m_randomizedPosition.has_value() ? m_randomizedPosition.value() : "Default";
+    const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
       return defaultPosIt->second.background;
@@ -55,7 +58,8 @@ std::string IBackgroundData::foregroundFilename(const std::string &position)
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    const auto defaultPosIt = positions.find("Default");
+    std::string defaultPosition = m_randomizedPosition.has_value() ? m_randomizedPosition.value() : "Default";
+    const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
       return defaultPosIt->second.foreground;
@@ -101,4 +105,17 @@ std::vector<std::string> IBackgroundData::positionsList(const std::string &varia
   }
 
   return positions;
+}
+
+void IBackgroundData::randomizeDefault()
+{
+  auto positions = positionsList(m_currentVariant);
+  if (positions.empty())
+    return;
+
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+
+  std::uniform_int_distribution<size_t> dist(0, positions.size() - 1);
+  m_randomizedPosition.emplace(positions[dist(gen)]);
 }

@@ -28,6 +28,11 @@ void JsonBackgroundData::loadBackground(const std::string &backgroundPath)
       parseBackgroundVariant(variantName, variantData);
     }
 
+    if(j.value("randomize_position", false))
+    {
+      randomizeDefault();
+    }
+
 }
 
 void JsonBackgroundData::parseBackgroundVariant(const std::string &name, const JSONObject &variantObject)
