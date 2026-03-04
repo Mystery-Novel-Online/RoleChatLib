@@ -6,7 +6,7 @@ using namespace rolechat::background;
 
 void IBackgroundData::assignPosition(const std::string& variant, const std::string & position, BackgroundPosition data)
 {
-  if(m_currentVariant.empty())
+  if(m_currentVariant.empty() || variant == "Default" || variant == "default")
   {
     m_defaultVariant = variant;
     m_currentVariant = variant;
