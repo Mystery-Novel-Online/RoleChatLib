@@ -86,6 +86,7 @@ bool RolechatDatabase::exec(const std::string& sql) {
 
 bool RolechatDatabase::incrementCharacterUsage(const std::string &character)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   if(character.empty())
     return false;
 
@@ -112,6 +113,7 @@ bool RolechatDatabase::incrementCharacterUsage(const std::string &character)
 
 std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getCharactersSortedByLastUsed()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<std::tuple<std::string, int, long long>> results;
 
   if (!db) return results;
@@ -140,6 +142,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
 
 std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getCharactersSortedByUsage()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<std::tuple<std::string, int, long long>> results;
 
   if (!db) return results;
@@ -168,6 +171,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
 
 bool RolechatDatabase::cacheContentData(const std::string &guid, const std::string &folder, const int lastUpdated, const int contentId)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   if (!db) return false;
 
   const char* sql = R"(
@@ -195,6 +199,7 @@ bool RolechatDatabase::cacheContentData(const std::string &guid, const std::stri
 
 std::string RolechatDatabase::workshopGuid(std::string folderName)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   if (!db) return "";
 
   const char* sql = R"(
@@ -221,6 +226,7 @@ std::string RolechatDatabase::workshopGuid(std::string folderName)
 
 int RolechatDatabase::workshopUpdateTime(std::string folderName)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   if (!db) return 0;
 
   const char* sql = R"(
@@ -269,6 +275,7 @@ RolechatDatabase &RolechatDatabase::instance()
 
 void RolechatDatabase::toggleMount(const std::string &path, bool active)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   SQLStmt stmt(db, R"(
         INSERT INTO mounted_directories (directory, active_state)
         VALUES (?, ?)
@@ -283,6 +290,7 @@ void RolechatDatabase::toggleMount(const std::string &path, bool active)
 
 void RolechatDatabase::removeMount(const std::string &path)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   SQLStmt stmt(db, R"(
         DELETE FROM mounted_directories
         WHERE directory = ?
@@ -294,6 +302,7 @@ void RolechatDatabase::removeMount(const std::string &path)
 
 WorkshopData RolechatDatabase::searchContentGuid(const std::string &guid)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   SQLStmt stmt = WORKSHOP_DATA_TABLE.select()
       .where("guid = '" + guid + "'")
       .prepare(db);
