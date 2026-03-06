@@ -32,21 +32,12 @@ static SQLTable WORKSHOP_BACKGROUNDS_TABLE =
 
 
 RolechatDatabase::RolechatDatabase() {
-    std::string fullPath = "base/configs/user_data.db";
-    if (sqlite3_open(fullPath.c_str(), &db) != SQLITE_OK) {
-        std::cerr << "Failed to open DB: " << sqlite3_errmsg(db) << "\n";
-        db = nullptr;
-        return;
-    }
-
-    if (!initTables()) {
-        std::cerr << "Failed to initialize tables in database.\n";
-    }
+    bool success = loadDb("base/configs/user_data.db");
 }
 
 RolechatDatabase::~RolechatDatabase() {
-    if (db) {
-        sqlite3_close(db);
+  if (db()) {
+        sqlite3_close(db());
     }
 }
 
@@ -69,20 +60,6 @@ bool RolechatDatabase::initTables()
   return true;
 }
 
-bool RolechatDatabase::exec(const std::string& sql) {
-    if (!db) return false;
-
-    char* errMsg = nullptr;
-    int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg);
-
-    if (rc != SQLITE_OK) {
-        std::cerr << "SQL error: " << errMsg << "\n";
-        sqlite3_free(errMsg);
-        return false;
-    }
-
-    return true;
-}
 
 bool RolechatDatabase::incrementCharacterUsage(const std::string &character)
 {
@@ -90,7 +67,7 @@ bool RolechatDatabase::incrementCharacterUsage(const std::string &character)
   if(character.empty())
     return false;
 
-  if (!db) return false;
+  if (!db()) return false;
 
   const char* sql = R"(
         INSERT INTO character_usage (character, uses, last_used)
@@ -101,7 +78,7 @@ bool RolechatDatabase::incrementCharacterUsage(const std::string &character)
     )";
 
   sqlite3_stmt* stmt = nullptr;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
     return false;
 
   sqlite3_bind_text(stmt, 1, character.c_str(), -1, SQLITE_TRANSIENT);
@@ -116,7 +93,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
   std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<std::tuple<std::string, int, long long>> results;
 
-  if (!db) return results;
+  if (!db()) return results;
 
   const char* sql = R"(
         SELECT character, uses, last_used
@@ -125,7 +102,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
     )";
 
   sqlite3_stmt* stmt = nullptr;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
     return results;
 
   while (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -145,7 +122,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
   std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<std::tuple<std::string, int, long long>> results;
 
-  if (!db) return results;
+  if (!db()) return results;
 
   const char* sql = R"(
         SELECT character, uses, last_used
@@ -154,7 +131,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
     )";
 
   sqlite3_stmt* stmt = nullptr;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
     return results;
 
   while (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -172,7 +149,7 @@ std::vector<std::tuple<std::string, int, long long> > RolechatDatabase::getChara
 bool RolechatDatabase::cacheContentData(const std::string &guid, const std::string &folder, const int lastUpdated, const int contentId)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  if (!db) return false;
+  if (!db()) return false;
 
   const char* sql = R"(
         INSERT INTO workshop_data (guid, folder, last_updated, content_id)
@@ -184,7 +161,7 @@ bool RolechatDatabase::cacheContentData(const std::string &guid, const std::stri
     )";
 
   sqlite3_stmt* stmt = nullptr;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
     return false;
 
   sqlite3_bind_text(stmt, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
@@ -200,7 +177,7 @@ bool RolechatDatabase::cacheContentData(const std::string &guid, const std::stri
 std::string RolechatDatabase::workshopGuid(std::string folderName)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  if (!db) return "";
+  if (!db()) return "";
 
   const char* sql = R"(
         SELECT guid
@@ -210,7 +187,7 @@ std::string RolechatDatabase::workshopGuid(std::string folderName)
 
   sqlite3_stmt* stmt = nullptr;
 
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
     return "";
 
   sqlite3_bind_text(stmt, 1, folderName.c_str(), -1, SQLITE_TRANSIENT);
@@ -227,7 +204,7 @@ std::string RolechatDatabase::workshopGuid(std::string folderName)
 int RolechatDatabase::workshopUpdateTime(std::string folderName)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  if (!db) return 0;
+  if (!db()) return 0;
 
   const char* sql = R"(
         SELECT last_updated
@@ -238,7 +215,7 @@ int RolechatDatabase::workshopUpdateTime(std::string folderName)
   sqlite3_stmt* stmt = nullptr;
 
 
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
     return 0;
   sqlite3_bind_text(stmt, 1, folderName.c_str(), -1, SQLITE_TRANSIENT);
   int lastUpdated = 0;
@@ -259,7 +236,7 @@ std::vector<MountedDirectory> RolechatDatabase::mountedDirectories(bool excludeI
   if(excludeInactive)
     select.where("active_state = 1");
 
-  SQLStmt stmt = select.prepare(db);
+  SQLStmt stmt = select.prepare(db());
 
   while (stmt.step())
     results.push_back({stmt.text(0), stmt.integer(1) == 1});
@@ -276,7 +253,7 @@ RolechatDatabase &RolechatDatabase::instance()
 void RolechatDatabase::toggleMount(const std::string &path, bool active)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  SQLStmt stmt(db, R"(
+  SQLStmt stmt(db(), R"(
         INSERT INTO mounted_directories (directory, active_state)
         VALUES (?, ?)
         ON CONFLICT(directory) DO UPDATE SET
@@ -291,7 +268,7 @@ void RolechatDatabase::toggleMount(const std::string &path, bool active)
 void RolechatDatabase::removeMount(const std::string &path)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  SQLStmt stmt(db, R"(
+  SQLStmt stmt(db(), R"(
         DELETE FROM mounted_directories
         WHERE directory = ?
     )");
@@ -305,7 +282,7 @@ WorkshopData RolechatDatabase::searchContentGuid(const std::string &guid)
   std::lock_guard<std::mutex> lock(m_mutex);
   SQLStmt stmt = WORKSHOP_DATA_TABLE.select()
       .where("guid = '" + guid + "'")
-      .prepare(db);
+      .prepare(db());
 
   if(stmt.step())
     return {stmt.text(0), stmt.text(1), stmt.integer(2), stmt.integer(3)};

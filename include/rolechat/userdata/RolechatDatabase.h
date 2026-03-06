@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rolechat/userdata/SQLDB.h"
 #include <string>
 #include <sqlite3.h>
 #include <vector>
@@ -25,7 +26,7 @@ struct MountedDirectory
   bool active;
 };
 
-class RolechatDatabase {
+class RolechatDatabase : public SQLDB {
 public:
 
     static RolechatDatabase& instance();
@@ -33,8 +34,7 @@ public:
     RolechatDatabase();
     ~RolechatDatabase();
 
-    bool initTables();
-    bool exec(const std::string& sql);
+    bool initTables() override;
 
     bool incrementCharacterUsage(const std::string& character);
     std::vector<std::tuple<std::string, int, long long>> getCharactersSortedByLastUsed();
@@ -56,5 +56,4 @@ public:
 
 private:
     std::mutex m_mutex;
-    sqlite3* db = nullptr;
 };
