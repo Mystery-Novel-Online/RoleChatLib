@@ -56,6 +56,9 @@ std::string RCFile::findFirst() const
         {
           for (const auto& candidate : candidates)
           {
+            if (candidate.rfind("theme/", 0) == 0)
+              continue;
+
             std::string packagePath = mounted.directory + "/" + candidate;
             if (exists(packagePath))
               return packagePath;
@@ -107,6 +110,9 @@ std::vector<std::string> RCFile::findAll() const
     {
       for (const auto& candidate : candidates)
       {
+        if (candidate.rfind("theme/", 0) == 0)
+          continue;
+
         std::string packagePath = mounted.directory + "/" + candidate;
         if (exists(packagePath))
           results.push_back(packagePath);

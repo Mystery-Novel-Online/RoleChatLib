@@ -76,6 +76,10 @@ bool TemporaryDB::exportDebug()
 
 void TemporaryDB::scanCharacters()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  SQLStmt deleteStmt(db(), "DELETE FROM avaliable_characters");
+  deleteStmt.step();
+
   for(const auto& path : rolechat::fs::RCDir("characters").findAll())
   {
     for (const auto& entry : rolechat::fs::RCDir::subDirectories(path))
@@ -116,7 +120,6 @@ std::string TemporaryDB::characterPath(const std::string &character)
 
 void TemporaryDB::foundCharacter(const std::string &name, const std::string &path)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
   SQLStmt stmt(db(), R"(
         INSERT INTO avaliable_characters (character, path)
         VALUES (?, ?)

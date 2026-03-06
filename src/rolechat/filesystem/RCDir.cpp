@@ -38,6 +38,9 @@ std::string RCDir::findFirst() const
         {
           for (const auto& candidate : m_filePathList)
           {
+            if (candidate.rfind("theme/", 0) == 0)
+              continue;
+
             std::string packagePath = mounted.directory + "/" + candidate;
             if (exists(packagePath))
               return packagePath;
@@ -83,6 +86,9 @@ std::vector<std::string> RCDir::findAll() const
         {
           for (const auto& candidate : m_filePathList)
           {
+            if (candidate.rfind("theme/", 0) == 0)
+              continue;
+
             std::string packagePath = mounted.directory + "/" + candidate;
             if (!exists(packagePath))
               continue;
