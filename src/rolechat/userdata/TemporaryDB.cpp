@@ -82,7 +82,7 @@ void TemporaryDB::scanCharacters()
 
   for(const auto& path : rolechat::fs::RCDir("characters").findAll())
   {
-    for (const auto& entry : rolechat::fs::RCDir::subDirectories(path))
+    for (auto entry : rolechat::fs::RCDir::subDirectories(path))
     {
       foundCharacter(entry, path + "/" + entry);
     }

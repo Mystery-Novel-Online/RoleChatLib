@@ -30,6 +30,7 @@ public:
 private:
     std::vector<std::string> m_filePathList;
     bool m_allowPackages = true;
+    bool m_notRelative= false;
 };
 }
 #endif

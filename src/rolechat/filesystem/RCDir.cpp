@@ -8,7 +8,8 @@ using namespace rolechat::fs;
 
 RCDir::RCDir(const std::string &path, bool allowPackages) : m_allowPackages(allowPackages) 
 {
-    m_filePathList.push_back(path);
+  m_filePathList.push_back(path);
+  m_notRelative = path[1] == ':' && (path[2] == '/' || path[2] == '\\');
 }
 
 RCDir::RCDir(const std::vector<std::string> &paths, bool allowPackages) : m_filePathList(paths), m_allowPackages(allowPackages) 
@@ -126,6 +127,7 @@ std::vector<std::string> RCDir::subDirectories() const
     std::vector<std::string> result;
 
     std::vector<std::string> directoryList = findAll();
+
     for (const auto& candidate : directoryList) 
     {
         for (const auto& entry : std::filesystem::directory_iterator(candidate)) 
@@ -148,7 +150,7 @@ std::vector<std::string> RCDir::subDirectories(const std::string &path)
     for (const auto& entry : std::filesystem::directory_iterator(path)) 
     {
         if (entry.is_directory())
-            result.push_back(entry.path().filename().string());
+            result.push_back(entry.path().filename().u8string());
     }
 
     return result;
