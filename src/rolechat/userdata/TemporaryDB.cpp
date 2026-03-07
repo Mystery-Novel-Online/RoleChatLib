@@ -109,7 +109,7 @@ std::string TemporaryDB::characterPath(const std::string &character)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   SQLStmt stmt = AVALIABLE_CHARACTERS_TABLE.select()
-                     .where("character = '" + character + "'")
+                     .where("character", character)
                      .prepare(db());
 
   if(stmt.step())

@@ -30,6 +30,11 @@ static SQLTable WORKSHOP_BACKGROUNDS_TABLE =
         .text("folder").done()
         .integer("last_updated").defaultValue(0).done();
 
+static SQLTable PACKAGES_TABLE =
+    SQLTable("packages")
+        .text("directory").notNull().unique().primaryKey().done()
+        .integer("active_state").defaultValue(1).done();
+
 
 RolechatDatabase::RolechatDatabase() {
     bool success = loadDb("base/configs/user_data.db");
@@ -47,7 +52,8 @@ bool RolechatDatabase::initTables()
       CHARACTER_USAGE_TABLE.build(),
       WORKSHOP_DATA_TABLE.build(),
       MOUNTED_FOLDERS_TABLE.build(),
-      WORKSHOP_BACKGROUNDS_TABLE.build()
+      WORKSHOP_BACKGROUNDS_TABLE.build(),
+      PACKAGES_TABLE.build()
   };
 
   for (const auto& sql : statements)

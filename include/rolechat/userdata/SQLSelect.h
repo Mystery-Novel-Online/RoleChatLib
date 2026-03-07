@@ -17,6 +17,22 @@ public:
     return *this;
   }
 
+  SQLSelect& where(const std::string& condition, const std::string& value) {
+    m_whereClause = condition + " = '" + value + "'";
+    return *this;
+  }
+
+  SQLSelect& where(const std::string& condition, const int value) {
+    m_whereClause = condition + " = " + std::to_string(value);
+    return *this;
+  }
+
+  SQLSelect& where(const std::string& condition, const bool value) {
+    std::string boolString = value ? "1" : "0";
+    m_whereClause = condition + " = " + boolString;
+    return *this;
+  }
+
   SQLSelect& columns(std::vector<std::string> columns) {
     m_columns = columns;
     return *this;

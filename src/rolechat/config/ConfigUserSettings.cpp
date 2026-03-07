@@ -3,12 +3,50 @@
 #include <fstream>
 #include <iostream>
 
+std::filesystem::path getConfigPath()
+{
+#ifdef _WIN32
+  const char* appdata = std::getenv("APPDATA");
+  std::filesystem::path dir = std::filesystem::path(appdata) / "Rolechat";
+#else
+  const char* home = std::getenv("HOME");
+  std::filesystem::path dir = std::filesystem::path(home) / ".config" / "rolechat";
+#endif
+
+  std::filesystem::create_directories(dir);
+  return dir / "config.json";
+}
+
+std::filesystem::path getOldConfigPath()
+{
+  return "base/configs/config.json";
+}
+
 using namespace rolechat::config;
 
 std::unordered_map<std::string, std::string> ConfigUserSettings::m_configStrings = {};
 std::unordered_map<std::string, bool> ConfigUserSettings::m_configBooleans = {};
 std::unordered_map<std::string, int> ConfigUserSettings::m_configIntegers = {};
 std::unordered_map<std::string, float> ConfigUserSettings::m_configFloats = {};
+
+void migrateConfigIfNeeded()
+{
+  auto newPath = getConfigPath();
+  auto oldPath = getOldConfigPath();
+
+  if (!std::filesystem::exists(newPath) && std::filesystem::exists(oldPath))
+  {
+    try
+    {
+      std::filesystem::rename(oldPath, newPath);
+    }
+    catch (...)
+    {
+      std::filesystem::copy_file(oldPath, newPath, std::filesystem::copy_options::overwrite_existing);
+      std::filesystem::remove(oldPath);
+    }
+  }
+}
 
 void ConfigUserSettings::save()
 {
@@ -30,7 +68,7 @@ void ConfigUserSettings::save()
     JsonData fileObject;
     fileObject["config"] = configObject;
 
-    std::ofstream file("base/configs/config.json");
+    std::ofstream file(getConfigPath());
     if (!file.is_open()) {
         std::cerr << "Failed to open config file for writing.\n";
         return;
@@ -44,7 +82,9 @@ void ConfigUserSettings::load()
 {
     using namespace rolechat::JsonUtils;
 
-    std::ifstream file("base/configs/config.json");
+    migrateConfigIfNeeded();
+
+    std::ifstream file(getConfigPath());
     if (!file.is_open()) {
         std::cerr << "Failed to open config file for reading.\n";
         return;
