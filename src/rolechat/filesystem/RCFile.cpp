@@ -28,15 +28,28 @@ RCFile::RCFile(const std::vector<std::string> &paths, const std::vector<std::str
 
 std::string RCFile::findFirst() const
 {
+    bool searchingAbsolute = false;
     std::vector<std::string> candidates;
-    for (const auto& filePath : m_fileNameList) 
+    for (const auto& filePath : m_fileNameList)
     {
+        if(!searchingAbsolute && filePath.length() > 3)
+          searchingAbsolute = filePath[1] == ':' && (filePath[2] == '/' || filePath[2] == '\\');
+
         candidates.push_back(filePath);
         for (const auto& ext : m_extensions)
             candidates.push_back(filePath + ext);
     }
 
-    if (m_allowPackages) 
+    if(searchingAbsolute)
+    {
+      for (const auto& candidate : candidates)
+      {
+        if (exists(candidate))
+          return candidate;
+      }
+    }
+
+    if (m_allowPackages && !searchingAbsolute)
     {
         for (const auto& packageName : PackageManager::packageNames()) 
         {

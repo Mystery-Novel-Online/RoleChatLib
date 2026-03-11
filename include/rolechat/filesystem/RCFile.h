@@ -26,6 +26,7 @@ private:
     std::vector<std::string> m_extensions;
 
     bool m_allowPackages = true;
+    bool m_absolutePath = false;
 };
 }
 #endif
