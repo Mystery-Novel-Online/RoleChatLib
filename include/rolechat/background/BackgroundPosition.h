@@ -4,5 +4,6 @@ namespace rolechat::background {
 struct BackgroundPosition {
     std::string background;
     std::string foreground;
+    std::string ambientSfx;
 };
 }

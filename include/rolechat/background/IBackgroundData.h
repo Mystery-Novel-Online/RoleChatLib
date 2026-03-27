@@ -16,6 +16,7 @@ public:
   void setVariant(const std::string& variant);
   std::string backgroundFilename(const std::string& position);
   std::string foregroundFilename(const std::string& position);
+  std::string ambientSfx(const std::string& position);
 
   std::vector<std::string> variantsList();
   std::vector<std::string> positionsList();

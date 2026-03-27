@@ -70,6 +70,29 @@ std::string IBackgroundData::foregroundFilename(const std::string &position)
   return posIt->second.foreground;
 }
 
+std::string IBackgroundData::ambientSfx(const std::string &position)
+{
+  const auto variantIt = m_backgroundPositions.find(m_currentVariant);
+  if (variantIt == m_backgroundPositions.end())
+    return {};
+
+  const auto& positions = variantIt->second;
+
+  const auto posIt = positions.find(position);
+  if (posIt == positions.end())
+  {
+    std::string defaultPosition = m_randomizedPosition.has_value() ? m_randomizedPosition.value() : "Default";
+    const auto defaultPosIt = positions.find(defaultPosition);
+    if(defaultPosIt != positions.end())
+    {
+      return defaultPosIt->second.ambientSfx;
+    }
+    return {};
+  }
+
+  return posIt->second.ambientSfx;
+}
+
 std::vector<std::string> IBackgroundData::variantsList()
 {
   std::vector<std::string> variants;

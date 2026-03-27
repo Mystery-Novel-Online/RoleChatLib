@@ -41,7 +41,8 @@ void JsonBackgroundData::parseBackgroundVariant(const std::string &name, const J
   {
     std::string defaultBg = variantObject.value("background", "");
     std::string defaultForeground = variantObject.value("foreground", "");
-    assignPosition(name, "Default", { defaultBg, defaultForeground });
+    std::string defaultAmbient = variantObject.value("ambience", "");
+    assignPosition(name, "Default", { defaultBg, defaultForeground, defaultAmbient });
   }
 
   if(variantObject.contains("positions") && variantObject["positions"].is_object())
@@ -50,7 +51,8 @@ void JsonBackgroundData::parseBackgroundVariant(const std::string &name, const J
     {
       std::string background = pos.value("background", "");
       std::string foreground = pos.value("foreground", "");
-      assignPosition(name, key, { background, foreground });
+      std::string ambient = pos.value("foreground", "");
+      assignPosition(name, key, { background, foreground, ambient });
     }
   }
 }
