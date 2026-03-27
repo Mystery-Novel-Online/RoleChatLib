@@ -55,3 +55,12 @@ std::string ViewportScene::foregroundFile(const std::string &position)
   ApplicationFile bgFile("background/" + name + "/" + m_sceneBackground.value()->foregroundFilename(position));
   return bgFile.findFirst();
 }
+
+std::string ViewportScene::ambienceSound(const std::string &position)
+{
+  if(!m_sceneBackground.has_value())
+    return "";
+
+  const std::string& ambient = m_sceneBackground.value()->ambientSfx(position);
+  return ambient;
+}
