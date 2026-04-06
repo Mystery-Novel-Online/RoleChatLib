@@ -51,7 +51,7 @@ void JsonBackgroundData::parseBackgroundVariant(const std::string &name, const J
     {
       std::string background = pos.value("background", "");
       std::string foreground = pos.value("foreground", "");
-      std::string ambient = pos.value("foreground", "");
+      std::string ambient = pos.value("ambience", "");
       assignPosition(name, key, { background, foreground, ambient });
     }
   }
