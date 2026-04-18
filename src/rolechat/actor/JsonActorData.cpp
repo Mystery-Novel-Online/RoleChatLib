@@ -67,7 +67,7 @@ void JsonActorData::reload()
     if(!m_validCharacter)
       return;
 
-    std::string outfitPath = actorPath + "/outfits";
+    std::filesystem::path outfitPath = std::filesystem::u8path(actorPath + "/outfits");
 
     // List subdirectories in outfitPath
     std::vector<std::string> subdirs;
@@ -80,7 +80,7 @@ void JsonActorData::reload()
 
     for (const std::string& name : subdirs)
     {
-        std::string fullOutfitPath = outfitPath + "/" + name + "/outfit.json";
+        std::filesystem::path fullOutfitPath = std::filesystem::u8path(actorPath + "/outfits/" + name + "/outfit.json");
         std::time_t modifiedTime = 0;
         try {
             modifiedTime = fs::last_write_time(fs::path(fullOutfitPath)).time_since_epoch().count();

@@ -15,7 +15,8 @@ JsonData rolechat::JsonUtils::loadFile(const std::string &path)
 
 JsonData rolechat::JsonUtils::loadFile(const std::string &path, bool &validJson)
 {
-    std::ifstream file(path);
+    std::filesystem::path fsPath = std::filesystem::u8path(path);
+    std::ifstream file(fsPath);
     if (!file) {
         std::cerr << "Failed to open file: " << path << "\n";
         validJson = false;

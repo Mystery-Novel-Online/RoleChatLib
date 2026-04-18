@@ -143,7 +143,8 @@ std::vector<std::string> RCFile::findAll() const
 
 bool RCFile::exists(const std::string &path)
 {
-    return std::filesystem::exists(path) && std::filesystem::is_regular_file(path);
+    std::filesystem::path fsPath = std::filesystem::u8path(path);
+    return std::filesystem::exists(fsPath) && std::filesystem::is_regular_file(fsPath);
 }
 
 bool RCFile::exists() const
