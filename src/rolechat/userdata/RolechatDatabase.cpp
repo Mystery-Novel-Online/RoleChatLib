@@ -23,6 +23,10 @@ static SQLTable MOUNTED_FOLDERS_TABLE =
         .text("directory").notNull().unique().primaryKey().done()
         .integer("active_state").defaultValue(1).done();
 
+static SQLTable CALLWORDS_TABLE =
+    SQLTable("callwords")
+        .text("word").notNull().unique().primaryKey().done()
+        .integer("match_mode").defaultValue(0).done();
 
 static SQLTable WORKSHOP_BACKGROUNDS_TABLE =
     SQLTable("workshop_backgrounds")
@@ -52,6 +56,7 @@ bool RolechatDatabase::initTables()
       CHARACTER_USAGE_TABLE.build(),
       WORKSHOP_DATA_TABLE.build(),
       MOUNTED_FOLDERS_TABLE.build(),
+      CALLWORDS_TABLE.build(),
       WORKSHOP_BACKGROUNDS_TABLE.build(),
       PACKAGES_TABLE.build()
   };
@@ -295,4 +300,48 @@ WorkshopData RolechatDatabase::searchContentGuid(const std::string &guid)
 
   return{};
 
+}
+
+std::vector<UserCallword> RolechatDatabase::getCallwords()
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::vector<UserCallword> results;
+
+  SQLSelect select = CALLWORDS_TABLE.select();
+  SQLStmt stmt = select.prepare(db());
+
+  while (stmt.step())
+    results.push_back({stmt.text(0), stmt.integer(1)});
+
+  return results;
+}
+
+void RolechatDatabase::setCallwords(const std::vector<UserCallword> &callwords)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  if (!db())
+    return;
+
+  exec("BEGIN TRANSACTION;");
+
+
+  SQLStmt deleteStmt(db(), R"( DELETE FROM callwords )");
+  deleteStmt.step();
+
+
+  for (const auto& callword : callwords)
+  {
+    SQLStmt insertStmt(db(), R"(
+        INSERT INTO callwords (word, match_mode)
+        VALUES (?, ?)
+    )");
+
+    insertStmt.bind(1, callword.word);
+    insertStmt.bind(2, callword.mode);
+
+    insertStmt.step();
+  }
+
+  exec("COMMIT;");
 }

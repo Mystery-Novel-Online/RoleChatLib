@@ -26,6 +26,12 @@ struct MountedDirectory
   bool active;
 };
 
+struct UserCallword
+{
+  std::string word;
+  int mode;
+};
+
 class RolechatDatabase : public SQLDB {
 public:
 
@@ -53,6 +59,9 @@ public:
     void toggleMount(const std::string& path, bool active);
     void removeMount(const std::string& path);
     std::vector<MountedDirectory> mountedDirectories(bool excludeInactive = false);
+
+    void setCallwords(const std::vector<UserCallword>& callwords);
+    std::vector<UserCallword> getCallwords();
 
 private:
     std::mutex m_mutex;
