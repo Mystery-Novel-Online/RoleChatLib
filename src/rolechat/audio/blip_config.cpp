@@ -61,7 +61,6 @@ BlipConfig::BlipConfig(const std::string& name) : m_name(name)
       }
     }
   }
-  std::cout << "DEBUG";
 }
 
 std::string BlipConfig::soundFile(const std::string &gender)

@@ -20,6 +20,7 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
 
     setShowname(jsonData.value("showname", ""));
     setGender(jsonData.value("gender", ""));
+    setBlips(jsonData.value("blips", ""));
     setSide(jsonData.value("side", ""));
 
     setScalingMode(jsonData.value("scaling_mode", "automatic"));

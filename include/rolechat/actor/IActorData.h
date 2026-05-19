@@ -28,6 +28,7 @@ public:
     virtual std::string folder()    const { return m_folder; }
     virtual std::string showname()  const { return m_showname.empty() ? m_folder : m_showname;}
     virtual std::string gender()    const { return m_gender; }
+    virtual std::string blips()    const { return m_blips; }
     virtual std::string side()      const { return m_side; }
     virtual std::string path()      const { return m_path; }
     virtual ActorScalingMode scalingMode() const;
@@ -45,6 +46,7 @@ public:
     virtual void setPath(const std::string& path) { m_path = path; }
     virtual void setShowname(const std::string& showname) { m_showname = showname;}
     virtual void setGender(const std::string& gender) { m_gender = gender;}
+    virtual void setBlips(const std::string& blips) { m_blips = blips;}
     virtual void setSide(const std::string& side) {m_side = side;}
     virtual void setScalingMode(const std::string& mode) {m_scalingMode = mode;}
     virtual void setScalingPresets(std::vector<ActorScalingPreset> presets) { m_presets = presets; }
@@ -55,6 +57,7 @@ private:
     std::vector<ActorScalingPreset> m_presets = {};
     std::string m_folder = "";
     std::string m_path = "";
+    std::string m_blips = "";
     std::string m_showname = "";
     std::string m_gender = "female";
     std::string m_side = "wit";
