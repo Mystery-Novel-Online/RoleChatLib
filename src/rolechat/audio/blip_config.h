@@ -17,6 +17,8 @@ public:
 
   bool valid() const { return m_validConfig; }
 
+  std::string endingSfx() const;
+
 private:
   std::string m_name;
   std::vector<std::string> m_sound;
@@ -26,6 +28,7 @@ private:
   bool m_validConfig = false;
 
   std::map<std::string, std::vector<std::string>> m_genderOverrides = {};
+  std::string m_endingSound = "";
 };
 
 #endif // BLIP_CONFIG_H

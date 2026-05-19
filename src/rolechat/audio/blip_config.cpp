@@ -37,6 +37,7 @@ BlipConfig::BlipConfig(const std::string& name) : m_name(name)
     }
   }
 
+  m_endingSound = jsonData.value("ending_sfx", "");
   m_allowBlank = jsonData.value("allow_blanks", false);
 
   m_blipRate = jsonData.value("blip_rate", 30);
@@ -73,4 +74,11 @@ std::string BlipConfig::soundFile(const std::string &gender) const
     return pickRandom(m_sound);
 
   return {};
+}
+
+std::string BlipConfig::endingSfx() const
+{
+  if(m_endingSound.empty())
+    return "";
+  return "sounds/blips/" + m_name + "/" + m_endingSound;
 }
