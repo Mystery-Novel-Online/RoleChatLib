@@ -10,12 +10,12 @@ class BlipConfig
 public:
   BlipConfig(const std::string& name);
 
-  std::string name() { return m_name; };
-  std::string soundFile(const std::string& gender);
-  int blipRate() { return m_blipRate; };
-  bool blanksAllowed() { return m_allowBlank; }
+  std::string name() const { return m_name; };
+  std::string soundFile(const std::string& gender) const;
+  int blipRate() const { return m_blipRate; };
+  bool blanksAllowed() const { return m_allowBlank; }
 
-  bool valid() { return m_validConfig; }
+  bool valid() const { return m_validConfig; }
 
 private:
   std::string m_name;
