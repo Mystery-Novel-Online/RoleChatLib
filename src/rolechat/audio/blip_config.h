@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 class BlipConfig
 {
@@ -18,13 +19,13 @@ public:
 
 private:
   std::string m_name;
-  std::string m_sound;
+  std::vector<std::string> m_sound;
   int m_blipRate = 0;
   bool m_allowBlank = false;
 
   bool m_validConfig = false;
 
-  std::map<std::string, std::string> m_genderOverrides = {};
+  std::map<std::string, std::vector<std::string>> m_genderOverrides = {};
 };
 
 #endif // BLIP_CONFIG_H
