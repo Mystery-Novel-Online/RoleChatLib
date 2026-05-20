@@ -25,7 +25,7 @@ void IBackgroundData::setVariant(const std::string &variant)
   }
 }
 
-std::string IBackgroundData::backgroundFilename(const std::string &position)
+std::string IBackgroundData::backgroundFilename(const std::string &position, const std::string& timeofday)
 {
   const auto variantIt = m_backgroundPositions.find(m_currentVariant);
   if (variantIt == m_backgroundPositions.end())
@@ -40,15 +40,22 @@ std::string IBackgroundData::backgroundFilename(const std::string &position)
     const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
+      const auto timeVariant = defaultPosIt->second.time_variants.find(timeofday);
+      if(timeVariant != defaultPosIt->second.time_variants.end())
+        return timeVariant->second.background;
+
       return defaultPosIt->second.background;
     }
     return {};
   }
 
-  return posIt->second.background;
+  const auto timeVariant = posIt->second.time_variants.find(timeofday);
+  if(timeVariant != posIt->second.time_variants.end())
+    return timeVariant->second.background;
 
+  return posIt->second.background;
 }
-std::string IBackgroundData::foregroundFilename(const std::string &position)
+std::string IBackgroundData::foregroundFilename(const std::string &position, const std::string& timeofday)
 {
   const auto variantIt = m_backgroundPositions.find(m_currentVariant);
   if (variantIt == m_backgroundPositions.end())
@@ -62,15 +69,24 @@ std::string IBackgroundData::foregroundFilename(const std::string &position)
     const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
+      const auto timeVariant = defaultPosIt->second.time_variants.find(timeofday);
+      if(timeVariant != defaultPosIt->second.time_variants.end())
+        return timeVariant->second.foreground;
+
       return defaultPosIt->second.foreground;
     }
     return {};
   }
 
+
+  const auto timeVariant = posIt->second.time_variants.find(timeofday);
+  if(timeVariant != posIt->second.time_variants.end())
+    return timeVariant->second.foreground;
+
   return posIt->second.foreground;
 }
 
-std::string IBackgroundData::ambientSfx(const std::string &position)
+std::string IBackgroundData::ambientSfx(const std::string &position, const std::string& timeofday)
 {
   const auto variantIt = m_backgroundPositions.find(m_currentVariant);
   if (variantIt == m_backgroundPositions.end())
@@ -85,10 +101,18 @@ std::string IBackgroundData::ambientSfx(const std::string &position)
     const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
+      const auto timeVariant = defaultPosIt->second.time_variants.find(timeofday);
+      if(timeVariant != defaultPosIt->second.time_variants.end())
+        return timeVariant->second.ambientSfx;
+
       return defaultPosIt->second.ambientSfx;
     }
     return {};
   }
+
+  const auto timeVariant = posIt->second.time_variants.find(timeofday);
+  if(timeVariant != posIt->second.time_variants.end())
+    return timeVariant->second.ambientSfx;
 
   return posIt->second.ambientSfx;
 }

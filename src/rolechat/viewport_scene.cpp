@@ -25,7 +25,7 @@ bool ViewportScene::switchBackground(const std::string &name, const std::string 
   return true;
 }
 
-std::string ViewportScene::backgroundFile(const std::string &position)
+std::string ViewportScene::backgroundFile(const std::string &position, const std::string& timeofday)
 {
   if(!m_backgroundName.has_value())
     return "";
@@ -35,14 +35,14 @@ std::string ViewportScene::backgroundFile(const std::string &position)
 
   const std::string& name = m_backgroundName.value();
 
-  std::string fileName = m_sceneBackground.value()->backgroundFilename(position);
+  std::string fileName = m_sceneBackground.value()->backgroundFilename(position, timeofday);
   ApplicationFile bgFile("background/" + name + "/" + fileName);
 
   std::string firstFile = bgFile.findFirst();
   return firstFile;
 }
 
-std::string ViewportScene::foregroundFile(const std::string &position)
+std::string ViewportScene::foregroundFile(const std::string &position, const std::string& timeofday)
 {
   if(!m_backgroundName.has_value())
     return "";
@@ -52,15 +52,15 @@ std::string ViewportScene::foregroundFile(const std::string &position)
 
   const std::string& name = m_backgroundName.value();
 
-  ApplicationFile bgFile("background/" + name + "/" + m_sceneBackground.value()->foregroundFilename(position));
+  ApplicationFile bgFile("background/" + name + "/" + m_sceneBackground.value()->foregroundFilename(position, timeofday));
   return bgFile.findFirst();
 }
 
-std::string ViewportScene::ambienceSound(const std::string &position)
+std::string ViewportScene::ambienceSound(const std::string &position, const std::string& timeofday)
 {
   if(!m_sceneBackground.has_value())
     return "";
 
-  const std::string& ambient = m_sceneBackground.value()->ambientSfx(position);
+  const std::string& ambient = m_sceneBackground.value()->ambientSfx(position, timeofday);
   return ambient;
 }

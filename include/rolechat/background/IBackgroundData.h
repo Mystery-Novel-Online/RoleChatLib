@@ -14,9 +14,9 @@ public:
 
   void assignPosition(const std::string& variant, const std::string& position, BackgroundPosition data);
   void setVariant(const std::string& variant);
-  std::string backgroundFilename(const std::string& position);
-  std::string foregroundFilename(const std::string& position);
-  std::string ambientSfx(const std::string& position);
+  std::string backgroundFilename(const std::string& position, const std::string& timeofday = "");
+  std::string foregroundFilename(const std::string& position, const std::string& timeofday = "");
+  std::string ambientSfx(const std::string& position, const std::string& timeofday = "");
 
   std::vector<std::string> variantsList();
   std::vector<std::string> positionsList();

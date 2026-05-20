@@ -10,9 +10,9 @@ class ViewportScene
 public:
   virtual bool switchBackground(const std::string& name, const std::string& variant);
 
-  std::string backgroundFile(const std::string& position);
-  std::string foregroundFile(const std::string& position);
-  std::string ambienceSound(const std::string& position);
+  std::string backgroundFile(const std::string& position, const std::string& timeofday = "");
+  std::string foregroundFile(const std::string& position, const std::string& timeofday = "");
+  std::string ambienceSound(const std::string& position, const std::string& timeofday = "");
   std::vector<std::string> positions()
   {
     if(!m_sceneBackground.has_value()) return {};
