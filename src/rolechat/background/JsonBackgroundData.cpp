@@ -42,8 +42,22 @@ void JsonBackgroundData::parseBackgroundVariant(const std::string &name, const J
     std::string defaultBg = variantObject.value("background", "");
     std::string defaultForeground = variantObject.value("foreground", "");
     std::string defaultAmbient = variantObject.value("ambience", "");
-    assignPosition(name, "Default", { defaultBg, defaultForeground, defaultAmbient });
+    std::map<std::string, BackgroundPosition> timeVariants = {};
+
+    if(variantObject.contains("time_variants"))
+    {
+      for (auto& [variantName, variantData] : variantObject["time_variants"].items())
+      {
+        std::string timeBg = variantData.value("background", "");
+        std::string timeForeground = variantData.value("foreground", "");
+        std::string timeAmbient = variantData.value("ambience", "");
+        timeVariants[variantName] = {timeBg, timeForeground, timeAmbient};
+      }
+    }
+
+    assignPosition(name, "Default", { defaultBg, defaultForeground, defaultAmbient, timeVariants });
   }
+
 
   if(variantObject.contains("positions") && variantObject["positions"].is_object())
   {
@@ -52,7 +66,20 @@ void JsonBackgroundData::parseBackgroundVariant(const std::string &name, const J
       std::string background = pos.value("background", "");
       std::string foreground = pos.value("foreground", "");
       std::string ambient = pos.value("ambience", "");
-      assignPosition(name, key, { background, foreground, ambient });
+      std::map<std::string, BackgroundPosition> timeVariants = {};
+
+      if(pos.contains("time_variants"))
+      {
+        for (auto& [variantName, variantData] : pos.items())
+        {
+          std::string timeBg = variantData.value("background", "");
+          std::string timeForeground = variantData.value("foreground", "");
+          std::string timeAmbient = variantData.value("ambience", "");
+          timeVariants[variantName] = {timeBg, timeForeground, timeAmbient};
+        }
+      }
+
+      assignPosition(name, key, { background, foreground, ambient, timeVariants });
     }
   }
 }
