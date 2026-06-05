@@ -9,6 +9,8 @@ ThemeGameMode::ThemeGameMode(std::string gamemodePath) : m_gamemodeDirectory(gam
     if (!m_gamemodeDirectory.exists()) 
         return;
 
+    m_baseModule.emplace(gamemodePath, "");
+
     RCDir moduleDir(gamemodePath + "/modules");
     if (moduleDir.exists()){
         for (const auto& moduleName : moduleDir.subDirectories()) 
@@ -25,7 +27,9 @@ ThemeGameMode::ThemeGameMode(std::string gamemodePath) : m_gamemodeDirectory(gam
     if (timesDir.exists()) {
         for (const auto& timeModeName : timesDir.subDirectories()) 
             m_timeModes.emplace(timeModeName, std::make_unique<ThemeGameMode>(gamemodePath + "/times/" + timeModeName));
-    } 
+    }
+
+    m_validMode = true;
 }
 
 std::vector<std::string> ThemeGameMode::moduleNames() const
@@ -86,6 +90,14 @@ const ThemeElement *ThemeGameMode::getElement(ThemeSceneType scene, const std::s
         if(element)
             return element;
     }
+
+    if(m_baseModule.has_value())
+    {
+      const ThemeElement *element = m_baseModule.value().getElement(scene, identifier);
+      if(element)
+        return element;
+    }
+
 
     return nullptr;
 }

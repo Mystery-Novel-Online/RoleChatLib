@@ -1,12 +1,13 @@
-#ifndef ROLECHAT_THEME_THEME_TEXT_COLOR_H
-#define ROLECHAT_THEME_THEME_TEXT_COLOR_H
+#pragma once
+
 #include <string>
+
 namespace rolechat::theme {
 struct ThemeTextColor {
-    std::string name;
-    std::string showname;
-    std::string code;
+  std::string name{};
+  std::string code{};
+  std::string highlightChars{};
+  bool keepCharacters{false};
 };
 
 }
-#endif

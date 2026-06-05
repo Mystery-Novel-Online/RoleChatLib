@@ -1,5 +1,5 @@
-#ifndef ROLECHAT_DIALOGUE_DIALOGUE_TAG_TYPE_H
-#define ROLECHAT_DIALOGUE_DIALOGUE_TAG_TYPE_H
+#pragma once
+
 namespace rolechat::dialogue {
 enum DialogueTagType
 {
@@ -14,4 +14,3 @@ enum DialogueTagType
   TagType_NewLine,
 };
 }
-#endif

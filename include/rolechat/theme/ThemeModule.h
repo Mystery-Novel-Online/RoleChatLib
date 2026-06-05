@@ -6,6 +6,7 @@
 #include "rolechat/filesystem/RCDir.h"
 #include "rolechat/theme/ThemeScene.h"
 #include "rolechat/theme/ThemeHighlight.h"
+#include "rolechat/util/JsonUtils.h"
 
 namespace rolechat::theme {
 class ThemeModule {
@@ -16,6 +17,8 @@ public:
     const ThemeElement* getElement(ThemeSceneType scene, const std::string& identifier) const;
 
 private:
+    void parseScene(JsonUtils::JsonData& json, ThemeSceneType scene, const std::string& identifierString);
+
     std::string m_moduleName;
     std::string m_gamemodePath;
 
