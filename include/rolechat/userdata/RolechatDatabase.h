@@ -51,6 +51,7 @@ public:
 
     std::string workshopGuid(std::string folderName);
     int workshopUpdateTime(std::string folderName);
+    int contentVersionFromGuid(std::string guid);
 
     bool cacheContentData(const std::string& guid, const std::string& folder, const int lastUpdated, const int contentId);
 

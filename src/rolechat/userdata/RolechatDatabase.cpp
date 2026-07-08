@@ -345,3 +345,29 @@ void RolechatDatabase::setCallwords(const std::vector<UserCallword> &callwords)
 
   exec("COMMIT;");
 }
+
+int RolechatDatabase::contentVersionFromGuid(std::string guid)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  if (!db()) return 0;
+
+  const char* sql = R"(
+        SELECT last_updated
+        FROM workshop_data
+        WHERE guid = ?;
+    )";
+
+  sqlite3_stmt* stmt = nullptr;
+
+
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_text(stmt, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
+  int lastUpdated = 0;
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    lastUpdated = sqlite3_column_int64(stmt, 0);
+  }
+
+  sqlite3_finalize(stmt);
+  return lastUpdated;
+}
