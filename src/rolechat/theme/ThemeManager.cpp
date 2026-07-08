@@ -32,7 +32,7 @@ void rolechat::theme::ThemeManager::SwitchTime(const std::string &time)
   m_currentTheme->setCurrentTimeMode(time);
 }
 
-const rolechat::theme::ThemeElement &rolechat::theme::ThemeManager::GetElement(ThemeSceneType scene, const std::string &id)
+const rolechat::theme::ThemeElement rolechat::theme::ThemeManager::GetElement(ThemeSceneType scene, const std::string &id)
 {
   static ThemeElement fallback = {};
 
@@ -40,5 +40,12 @@ const rolechat::theme::ThemeElement &rolechat::theme::ThemeManager::GetElement(T
   if(!element)
     return fallback;
 
-  return *element;
+  ThemeElement scaled = *element;
+
+  scaled.position.x = static_cast<int>(scaled.position.x * m_resize);
+  scaled.position.y = static_cast<int>(scaled.position.y * m_resize);
+  scaled.position.width = static_cast<int>(scaled.position.width * m_resize);
+  scaled.position.height = static_cast<int>(scaled.position.height * m_resize);
+
+  return scaled;
 }

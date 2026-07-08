@@ -20,12 +20,14 @@ public:
   void SwitchGamemode(const std::string& gamemode);
   void SwitchTime(const std::string& time);
 
+  void SetResizeFactor(double factor) { m_resize = factor; if(factor <= 0.0) m_resize = 0.1; };
+
   ThemeGameMode& GetTheme()
   {
     return *m_currentTheme;
   }
 
-  const ThemeElement& GetElement(ThemeSceneType scene, const std::string& id);
+  const ThemeElement GetElement(ThemeSceneType scene, const std::string& id);
 
 
 private:
