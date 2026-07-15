@@ -20,4 +20,6 @@ struct ActorLayer
     bool defaultDisabled;
     std::vector<std::string> variationOptions = {};
     bool globalSelection;
+
+    std::string defaultAsset;
 };

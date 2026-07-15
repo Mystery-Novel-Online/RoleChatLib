@@ -44,6 +44,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
         layer.offsetName = obj.value("name", "");
         layer.spriteOrder = obj.value("order", "");
         layer.blendMode = obj.value("blend_mode", "");
+        layer.defaultAsset = obj.value("default", "");
 
         if(obj.contains("offset"))
         {
@@ -136,7 +137,9 @@ void ActorOutfit::readEmotes(const JsonData& data)
           }
           else
           {
+            // Searches for an object named after the current layer within the current emote object.
             auto it = emoteData.find(layer.offsetName);
+
             if (it != emoteData.end() && it->is_string()) {
               std::string overlayImage = it->get<std::string>();
               if (!overlayImage.empty()) {
@@ -145,6 +148,14 @@ void ActorOutfit::readEmotes(const JsonData& data)
                 emote.emoteOverlays.push_back(newLayer);
               }
             }
+            else if (!layer.defaultAsset.empty())
+            {
+              // If no object was found, here we will create the layer anyway as long as a "default" parameter was provided to the layer.
+              ActorLayer newLayer = layer;
+              newLayer.spriteName = layer.defaultAsset;
+              emote.emoteOverlays.push_back(newLayer);
+            }
+
           }
         }
 
