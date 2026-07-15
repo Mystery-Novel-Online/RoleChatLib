@@ -22,7 +22,7 @@ ActorScalingMode IActorData::scalingMode() const
 std::string IActorData::buttonImage(const ActorEmote &emote, bool enabled) const
 {
     std::string state = enabled ? "on" : "off";
-    return "emotions/button" + emote.key + "_" + state + ".png";
+    return "emotions/button" + emote.key + "_" + state;
 }
 
 std::string IActorData::selectedImage(const ActorEmote &emote) const

@@ -178,7 +178,7 @@ std::vector<ActorEmote> JsonActorData::emotes()
 
 std::string JsonActorData::buttonImage(const ActorEmote& emote, bool enabled) const
 {
-    return "outfits/" + emote.outfitName + "/emotions/" + emote.comment + (enabled ? "_on" : "") + ".png";
+    return "outfits/" + emote.outfitName + "/emotions/" + emote.comment + (enabled ? "_on" : "");
 }
 
 std::string JsonActorData::selectedImage(const ActorEmote& emote) const
