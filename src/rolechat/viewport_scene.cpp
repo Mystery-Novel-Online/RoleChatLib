@@ -20,7 +20,7 @@ bool ViewportScene::switchBackground(const std::string &name, const std::string 
     return false;
 
   m_sceneBackground.emplace(std::make_unique<background::JsonBackgroundData>());
-  m_sceneBackground.value()->loadBackground(bgFile.findFirst());
+  m_sceneBackground.value()->loadBackground(bgDirectory.findFirst());
   m_sceneBackground.value()->setVariant(variant);
   return true;
 }

@@ -13,6 +13,11 @@ public:
     JsonBackgroundData(){};
     void loadBackground(const std::string& backgroundPath);
     void parseBackgroundVariant(const std::string& name, const JSONObject& variantObject);
+
+  private:
+    void searchVariantDirectory();
+  private:
+    std::string m_backgroundPath = "";
 };
 
 }
