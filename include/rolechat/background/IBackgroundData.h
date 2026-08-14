@@ -22,6 +22,8 @@ public:
   std::vector<std::string> positionsList();
   std::vector<std::string> positionsList(const std::string& variant);
 
+  const std::string& currentVariant() { return m_currentVariant; };
+
   void randomizeDefault();
 
 
