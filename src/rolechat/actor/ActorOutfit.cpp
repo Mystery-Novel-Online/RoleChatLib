@@ -31,6 +31,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
 
     m_showname = jsonData.value("showname", "");
 
+    m_defaultImage = jsonData["default_rules"].value("image", "");
     m_showDesk = jsonData["default_rules"].value("show_desk", true);
     m_ignoreOffsets = jsonData["default_rules"].value("ignore_offsets", false);
 
@@ -108,7 +109,11 @@ void ActorOutfit::readEmotes(const JsonData& data)
         emote.comment       = emoteName;
         emote.sequence      = sequenceFile;
         emote.anim          = animName.empty() ? "" : outfitPath + animName;
-        emote.dialog        = outfitPath + emoteName;
+        if(m_defaultImage.empty())
+          emote.dialog        = outfitPath + emoteName;
+        else
+          emote.dialog        = outfitPath + m_defaultImage;
+
 
         if (emoteData.contains("image")) {
             std::string imageOverride = emoteData.value("image", "");

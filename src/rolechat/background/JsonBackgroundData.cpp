@@ -93,6 +93,12 @@ void JsonBackgroundData::searchVariantDirectory()
 {
   std::filesystem::path variantPath = std::filesystem::u8path(m_backgroundPath + "/variants");
 
+  std::error_code ec;
+
+  if (!std::filesystem::is_directory(variantPath, ec)) {
+    return;
+  }
+
   std::vector<std::string> subdirs;
   for (const auto& entry : std::filesystem::directory_iterator(variantPath)) {
     if (entry.is_directory()) {

@@ -31,6 +31,7 @@ private:
 
     bool m_showDesk = true;
     bool m_ignoreOffsets = false;
+    std::string m_defaultImage = "";
 
     std::vector<ActorEmote> m_emotes = {};
     std::vector<ActorLayer> m_layers = {};
