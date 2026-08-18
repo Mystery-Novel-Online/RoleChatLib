@@ -102,7 +102,6 @@ void JsonActorData::reload()
             }
             else
             {
-                delete outfitIt->second;
                 m_outfits.erase(outfitIt);
                 m_outfitModifiedTimes.erase(modTimeIt);
             }
@@ -111,7 +110,7 @@ void JsonActorData::reload()
         if (needsReload)
         {
             m_outfitNames.push_back(name);
-            m_outfits[name] = new rolechat::actor::ActorOutfit(folder(), name, actorPath);
+            m_outfits[name] = std::make_unique<rolechat::actor::ActorOutfit>(folder(), name, actorPath);
             m_outfitModifiedTimes[name] = modifiedTime;
         }
         else
@@ -130,6 +129,16 @@ void JsonActorData::reload()
             ordered.push_back(name);
 
     m_outfitNames = std::move(ordered);
+}
+
+std::unordered_map<std::string, ActorOutfit *> JsonActorData::outfits() const
+{
+  std::unordered_map<std::string, actor::ActorOutfit*> result;
+
+  for (const auto& [name, outfit] : m_outfits)
+    result.emplace(name, outfit.get());
+
+  return result;
 }
 
 std::string JsonActorData::showname() const

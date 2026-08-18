@@ -17,7 +17,7 @@ public:
     void load(const std::string& folder, const std::string& path) override;
     void reload() override;
 
-    std::unordered_map<std::string, actor::ActorOutfit*> outfits() const override {return m_outfits; }
+    std::unordered_map<std::string, actor::ActorOutfit*> outfits() const override;
     std::string showname() const override;
     std::string side() const override;
     std::vector<std::string> outfitNames() const override { return m_outfitNames; }
@@ -30,7 +30,7 @@ public:
 
 private:
     bool m_validCharacter = false;
-    std::unordered_map<std::string, actor::ActorOutfit*> m_outfits = {};
+    std::unordered_map<std::string, std::unique_ptr<actor::ActorOutfit>> m_outfits = {};
     std::vector<std::string> m_outfitNames = {};
     std::vector<std::string> m_outfitsOrder = {};
     std::unordered_map<std::string, std::time_t> m_outfitModifiedTimes = {};
