@@ -36,7 +36,7 @@ std::string IBackgroundData::backgroundFilename(const std::string &position, con
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    std::string defaultPosition = m_randomizedPosition.has_value() ? m_randomizedPosition.value() : "Default";
+    std::string defaultPosition = "Default";
     const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
@@ -65,7 +65,7 @@ std::string IBackgroundData::foregroundFilename(const std::string &position, con
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    std::string defaultPosition = m_randomizedPosition.has_value() ? m_randomizedPosition.value() : "Default";
+    std::string defaultPosition = "Default";
     const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
@@ -97,7 +97,7 @@ std::string IBackgroundData::ambientSfx(const std::string &position, const std::
   const auto posIt = positions.find(position);
   if (posIt == positions.end())
   {
-    std::string defaultPosition = m_randomizedPosition.has_value() ? m_randomizedPosition.value() : "Default";
+    std::string defaultPosition = "Default";
     const auto defaultPosIt = positions.find(defaultPosition);
     if(defaultPosIt != positions.end())
     {
@@ -154,15 +154,3 @@ std::vector<std::string> IBackgroundData::positionsList(const std::string &varia
   return positions;
 }
 
-void IBackgroundData::randomizeDefault()
-{
-  auto positions = positionsList(m_currentVariant);
-  if (positions.empty())
-    return;
-
-  static std::random_device rd;
-  static std::mt19937 gen(rd());
-
-  std::uniform_int_distribution<size_t> dist(0, positions.size() - 1);
-  m_randomizedPosition.emplace(positions[dist(gen)]);
-}

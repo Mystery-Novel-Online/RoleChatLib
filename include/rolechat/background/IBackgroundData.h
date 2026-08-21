@@ -23,17 +23,15 @@ public:
   std::vector<std::string> positionsList(const std::string& variant);
 
   const std::string& currentVariant() { return m_currentVariant; };
-
-  void randomizeDefault();
-
+  void setRandomizeState(const bool state) { m_randomizePosition = state; }
+  bool randomizedEnabled() { return m_randomizePosition; }
 
   virtual void loadBackground(const std::string& backgroundPath) = 0;
 private:
   std::unordered_map<std::string, std::unordered_map<std::string, BackgroundPosition>> m_backgroundPositions;
   std::string m_currentVariant = "";
   std::string m_defaultVariant = "";
-
-  std::optional<std::string> m_randomizedPosition;
+  bool m_randomizePosition = false;
 };
 
 } 

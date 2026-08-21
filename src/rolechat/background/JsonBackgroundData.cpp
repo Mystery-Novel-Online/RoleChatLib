@@ -33,6 +33,7 @@ void JsonBackgroundData::loadBackground(const std::string &backgroundPath)
 
     searchVariantDirectory();
 
+    setRandomizeState(j.value("randomize_position", false));
     if(j.value("randomize_position", false))
     {
       randomizeDefault();

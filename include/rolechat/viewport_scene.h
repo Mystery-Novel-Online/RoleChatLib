@@ -19,6 +19,12 @@ public:
     return m_sceneBackground.value()->positionsList();
   }
 
+  bool positionRandomized()
+  {
+    if(!m_sceneBackground.has_value()) return false;
+    return m_sceneBackground.value()->randomizedEnabled();
+  }
+
   std::optional<std::unique_ptr<background::IBackgroundData>>& background() { return m_sceneBackground; }
 
 private:
