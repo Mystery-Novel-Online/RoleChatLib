@@ -23,6 +23,10 @@ static SQLTable MOUNTED_FOLDERS_TABLE =
         .text("directory").notNull().unique().primaryKey().done()
         .integer("active_state").defaultValue(1).done();
 
+static SQLTable PINNED_MUSIC_TABLE =
+    SQLTable("pinned_music")
+        .text("path").notNull().unique().primaryKey().done();
+
 static SQLTable CALLWORDS_TABLE =
     SQLTable("callwords")
         .text("word").notNull().unique().primaryKey().done()
@@ -58,7 +62,8 @@ bool RolechatDatabase::initTables()
       MOUNTED_FOLDERS_TABLE.build(),
       CALLWORDS_TABLE.build(),
       WORKSHOP_BACKGROUNDS_TABLE.build(),
-      PACKAGES_TABLE.build()
+      PACKAGES_TABLE.build(),
+      PINNED_MUSIC_TABLE.build()
   };
 
   for (const auto& sql : statements)
@@ -370,4 +375,43 @@ int RolechatDatabase::contentVersionFromGuid(std::string guid)
 
   sqlite3_finalize(stmt);
   return lastUpdated;
+}
+
+void RolechatDatabase::pinTrack(const std::string &path)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  SQLStmt stmt(db(), R"(
+        INSERT INTO pinned_music (path)
+        VALUES (?)
+    )");
+
+  stmt.bind(1, path);
+  stmt.step();
+}
+
+void RolechatDatabase::unpinTrack(const std::string &path)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  SQLStmt stmt(db(), R"(
+        DELETE FROM pinned_music
+        WHERE path = ?
+    )");
+
+  stmt.bind(1, path);
+  stmt.step();
+}
+
+std::vector<std::string> RolechatDatabase::getPinnedTracks()
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::vector<std::string> results;
+
+  SQLSelect select = PINNED_MUSIC_TABLE.select();
+
+  SQLStmt stmt = select.prepare(db());
+
+  while (stmt.step())
+    results.push_back(stmt.text(0));
+
+  return results;
 }

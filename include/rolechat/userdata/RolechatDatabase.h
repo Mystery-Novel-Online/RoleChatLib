@@ -64,6 +64,11 @@ public:
     void setCallwords(const std::vector<UserCallword>& callwords);
     std::vector<UserCallword> getCallwords();
 
+    //Pinned Music
+    void pinTrack(const std::string& path);
+    void unpinTrack(const std::string& path);
+    std::vector<std::string> getPinnedTracks();
+
 private:
     std::mutex m_mutex;
 };
