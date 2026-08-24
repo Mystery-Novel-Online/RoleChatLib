@@ -28,10 +28,10 @@ std::string RCDir::findFirst() const
             std::vector<std::string> disabled = PackageManager::disabledList();
             if (std::find(disabled.begin(), disabled.end(), packageName) == disabled.end()) 
             {
-                for (const auto& candidate : m_filePathList) 
+                for (const auto& candidate : m_filePathList)
                 {
                     std::string baseDir = packagePath(packageName) + candidate;
-                    if (exists(baseDir)) 
+                    if (exists(baseDir))
                         return baseDir;
                 }
             }
@@ -117,12 +117,13 @@ std::vector<std::string> RCDir::findAll() const
 
 bool RCDir::exists(const std::string &path)
 {
-    return std::filesystem::exists(path) && std::filesystem::is_directory(path);
+  std::filesystem::path fsPath = std::filesystem::u8path(path);
+  return std::filesystem::exists(fsPath) && std::filesystem::is_directory(fsPath);
 }
 
 bool RCDir::exists() const
 {
-    return findFirst().empty() == false;
+  return findFirst().empty() == false;
 }
 
 std::vector<std::string> RCDir::subDirectories() const
@@ -133,7 +134,7 @@ std::vector<std::string> RCDir::subDirectories() const
 
     for (const auto& candidate : directoryList) 
     {
-        for (const auto& entry : std::filesystem::directory_iterator(candidate)) 
+        for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::u8path(candidate)))
         {
             if (entry.is_directory())
                 result.push_back(entry.path().filename().string());
@@ -150,7 +151,7 @@ std::vector<std::string> RCDir::subDirectories(const std::string &path)
     if(!exists(path))
         return result;
         
-    for (const auto& entry : std::filesystem::directory_iterator(path)) 
+    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::u8path(path)))
     {
         if (entry.is_directory())
             result.push_back(entry.path().filename().u8string());
@@ -218,22 +219,22 @@ std::vector<std::string> RCDir::fileList(const std::string &directory, const std
 
 
 // Implementation of paths functions
-std::string RCDir::applicationPath()
+std::filesystem::path RCDir::applicationPath()
 {
     auto path = std::filesystem::current_path();
 #if defined(__APPLE__)
     for (int i = 0; i < 3; ++i)
         path = path.parent_path();
 #endif
-    return path.generic_string();
+    return path;
 }
 
 std::string RCDir::basePath()
 {
-    return applicationPath() + "/base/";
+  return applicationPath().u8string() + "/base/";
 }
 
 std::string RCDir::packagePath(const std::string &packageName)
 {
-    return applicationPath() + "/packages/" + packageName + "/";
+    return applicationPath().u8string() + "/packages/" + packageName + "/";
 }

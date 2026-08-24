@@ -1,5 +1,6 @@
 #ifndef FILESYSTEM_RCDIR_H
 #define FILESYSTEM_RCDIR_H
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -24,7 +25,7 @@ public:
     static bool exists(const std::string &path);
 
 
-    static std::string applicationPath();
+    static std::filesystem::path applicationPath();
     static std::string basePath();
     static std::string packagePath(const std::string& packageName);
 private:

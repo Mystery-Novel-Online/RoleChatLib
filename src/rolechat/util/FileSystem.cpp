@@ -22,7 +22,7 @@ std::vector<std::string> PackageManager::scanPackages()
     // Scan the packages directory for subdirectories
     if(RCDir::exists("packages")) 
     {
-        for (const auto& entry : std::filesystem::directory_iterator(RCDir::applicationPath() + "/packages/")) 
+        for (const auto& entry : std::filesystem::directory_iterator(RCDir::applicationPath() / "packages"))
         {
            if (entry.is_directory()) 
            {
