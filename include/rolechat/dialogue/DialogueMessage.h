@@ -26,10 +26,12 @@ struct DialogueMessage {
 
     //MessageEffect effect;
     int effectState;
-    int delatSfx;
+    int delaySfx;
     int shoutModifier;
 
     bool deskVisible = true;
+
+    bool emptyMessage = true;
 };
 }
 #endif

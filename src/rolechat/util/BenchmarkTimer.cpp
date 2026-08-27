@@ -5,9 +5,6 @@
 
 using namespace rolechat::benchmark;
 
-Timer::Timer() {
-}
-
 Timer::Timer(const std::string &a_name, bool a_silent)
     : m_name(a_name)
     , m_silentDebug(a_silent) {
@@ -34,7 +31,7 @@ void Timer::stop() {
     auto end = std::chrono::time_point_cast<std::chrono::microseconds>(m_resultData.endTime);
 
     auto duration = end - start;
-    double ms = duration * 0.001;
+    double ms = std::chrono::duration<double, std::milli>(duration).count();
     m_resultData.duration = ms;
 
     if (!m_silentDebug) {
