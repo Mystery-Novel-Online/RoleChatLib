@@ -27,6 +27,6 @@ std::string IActorData::buttonImage(const ActorEmote &emote, bool enabled) const
 
 std::string IActorData::selectedImage(const ActorEmote &emote) const
 {
-    return "emotions/selected.png";
+    return "emotions/selected";
 }
 

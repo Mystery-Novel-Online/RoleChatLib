@@ -192,7 +192,7 @@ std::string JsonActorData::buttonImage(const ActorEmote& emote, bool enabled) co
 
 std::string JsonActorData::selectedImage(const ActorEmote& emote) const
 {
-    return "outfits/" + outfit() + "/emotions/selected.png";
+    return "outfits/" + outfit() + "/emotions/selected";
 }
 
 void JsonActorData::switchOutfit(const std::string& outfit)
