@@ -7,7 +7,9 @@ enum class ActorScalingMode {
     StretchScaling,
     DynamicScaling,
     WidthSmoothScaling,
+    HeightSmoothScaling,
     WidthPixelScaling,
+    HeightPixelScaling,
     AutomaticScaling
 };
 }

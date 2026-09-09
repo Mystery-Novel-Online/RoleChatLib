@@ -7,7 +7,9 @@ ActorScalingMode IActorData::scalingMode() const
     static const std::unordered_map<std::string, ActorScalingMode> scalingModeMap = 
     {
         {"width_smooth", ActorScalingMode::WidthSmoothScaling},
+        {"height_smooth", ActorScalingMode::HeightSmoothScaling},
         {"width_pixels", ActorScalingMode::WidthPixelScaling},
+        {"height_pixels", ActorScalingMode::HeightPixelScaling},
         {"automatic", ActorScalingMode::AutomaticScaling}
     };
 
@@ -15,7 +17,9 @@ ActorScalingMode IActorData::scalingMode() const
     std::transform(mode.begin(), mode.end(), mode.begin(), ::tolower);
 
     auto it = scalingModeMap.find(mode);
-    if (it != scalingModeMap.end()) return it->second;
+    if (it != scalingModeMap.end()) {
+      return it->second;
+    }
     return ActorScalingMode::AutomaticScaling;
 }
 
