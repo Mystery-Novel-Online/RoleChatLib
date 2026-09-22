@@ -82,6 +82,7 @@ public:
     //Character Offsets
     void saveCharacterOffset(const std::string& chara, const std::string& name, SavedOffset offset);
     std::map<std::string, SavedOffset> getCharacterOffsets(const std::string& chara);
+    void deleteCharacterOffset(const std::string& chara, const std::string& name);
 
 private:
     std::mutex m_mutex;

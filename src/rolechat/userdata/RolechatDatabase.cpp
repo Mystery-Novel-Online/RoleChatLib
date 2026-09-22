@@ -485,3 +485,17 @@ std::map<std::string, SavedOffset> RolechatDatabase::getCharacterOffsets(const s
   sqlite3_finalize(stmt);
   return result;
 }
+
+void RolechatDatabase::deleteCharacterOffset(const std::string &chara, const std::string &name)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  SQLStmt stmt(db(), R"(
+        DELETE FROM chara_offsets
+        WHERE character = ?
+        AND name = ?
+    )");
+
+  stmt.bind(1, chara);
+  stmt.bind(2, name);
+  stmt.step();
+}
