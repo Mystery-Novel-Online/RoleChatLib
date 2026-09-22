@@ -5,6 +5,7 @@
 #include <sqlite3.h>
 #include <vector>
 #include <mutex>
+#include <map>
 
 struct WorkshopData
 {
@@ -30,6 +31,14 @@ struct UserCallword
 {
   std::string word;
   int mode;
+};
+
+
+struct SavedOffset
+{
+  int x;
+  int y;
+  int scale;
 };
 
 class RolechatDatabase : public SQLDB {
@@ -68,6 +77,11 @@ public:
     void pinTrack(const std::string& path);
     void unpinTrack(const std::string& path);
     std::vector<std::string> getPinnedTracks();
+
+
+    //Character Offsets
+    void saveCharacterOffset(const std::string& chara, const std::string& name, SavedOffset offset);
+    std::map<std::string, SavedOffset> getCharacterOffsets(const std::string& chara);
 
 private:
     std::mutex m_mutex;

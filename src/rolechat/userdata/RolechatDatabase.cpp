@@ -43,6 +43,15 @@ static SQLTable PACKAGES_TABLE =
         .text("directory").notNull().unique().primaryKey().done()
         .integer("active_state").defaultValue(1).done();
 
+static SQLTable CHARA_OFFSETS_TABLE =
+    SQLTable("chara_offsets")
+        .id()
+        .text("character").notNull().done()
+        .text("name").notNull().done()
+        .integer("x").defaultValue(500).done()
+        .integer("y").defaultValue(0).done()
+        .integer("scale").defaultValue(1000).done();
+
 
 RolechatDatabase::RolechatDatabase() {
     bool success = loadDb("base/configs/user_data.db");
@@ -63,7 +72,8 @@ bool RolechatDatabase::initTables()
       CALLWORDS_TABLE.build(),
       WORKSHOP_BACKGROUNDS_TABLE.build(),
       PACKAGES_TABLE.build(),
-      PINNED_MUSIC_TABLE.build()
+      PINNED_MUSIC_TABLE.build(),
+      CHARA_OFFSETS_TABLE.build()
   };
 
   for (const auto& sql : statements)
@@ -72,6 +82,7 @@ bool RolechatDatabase::initTables()
     if (!exec(sql))
       return false;
   }
+  exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_chara_offsets_character_name ON chara_offsets(character, name);");
 
   return true;
 }
@@ -414,4 +425,63 @@ std::vector<std::string> RolechatDatabase::getPinnedTracks()
     results.push_back(stmt.text(0));
 
   return results;
+}
+
+void RolechatDatabase::saveCharacterOffset(const std::string &chara, const std::string &name, SavedOffset offset)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  if (!db()) {
+    return;
+  }
+
+  SQLStmt stmt(db(), R"(
+        INSERT INTO chara_offsets (character, name, x, y, scale)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(character, name) DO UPDATE SET
+            x = excluded.x,
+            y = excluded.y,
+            scale = excluded.scale
+    )");
+
+  stmt.bind(1, chara);
+  stmt.bind(2, name);
+  stmt.bind(3, offset.x);
+  stmt.bind(4, offset.y);
+  stmt.bind(5, offset.scale);
+
+  stmt.step();
+}
+
+std::map<std::string, SavedOffset> RolechatDatabase::getCharacterOffsets(const std::string &chara)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  if (!db()) {
+    return {};
+  }
+
+  const char* sql = R"(
+        SELECT name, x, y, scale
+        FROM chara_offsets
+        WHERE character = ?;
+    )";
+
+  sqlite3_stmt* stmt = nullptr;
+
+
+  if (sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr) != SQLITE_OK) {
+    return {};
+  }
+
+  sqlite3_bind_text(stmt, 1, chara.c_str(), -1, SQLITE_TRANSIENT);
+
+  std::map<std::string, SavedOffset> result;
+
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    result[reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0))] = {sqlite3_column_int(stmt, 1), sqlite3_column_int(stmt, 2), sqlite3_column_int(stmt, 3)};
+  }
+
+  sqlite3_finalize(stmt);
+  return result;
 }
