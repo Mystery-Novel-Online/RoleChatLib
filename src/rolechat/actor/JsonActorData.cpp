@@ -72,12 +72,16 @@ void JsonActorData::reload()
 
     // List subdirectories in outfitPath
     std::vector<std::string> subdirs;
-    for (const auto& entry : fs::directory_iterator(outfitPath)) {
-        if (entry.is_directory()) {
-            subdirs.push_back(entry.path().filename().string());
-        }
+    if (std::filesystem::exists(outfitPath) && std::filesystem::is_directory(outfitPath)) {
+      for (const auto& entry : fs::directory_iterator(outfitPath)) {
+          if (entry.is_directory()) {
+              subdirs.push_back(entry.path().filename().string());
+          }
+      }
     }
-    if (subdirs.empty()) return;
+    if (subdirs.empty()) {
+      return;
+    }
 
     for (const std::string& name : subdirs)
     {
