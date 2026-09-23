@@ -18,12 +18,10 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
     if(!validJson)
         return;
     
-    if(jsonData.contains("side"))
-    {
+    if(jsonData.contains("side")) {
       m_position.emplace(jsonData.value("side", "wit"));
     }
-    else if(jsonData.contains("position"))
-    {
+    else if(jsonData.contains("position")) {
       m_position.emplace(jsonData.value("position", "wit"));
     }
 
@@ -31,13 +29,17 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
 
     m_showname = jsonData.value("showname", "");
 
-    m_defaultImage = jsonData["default_rules"].value("image", "");
-    m_showDesk = jsonData["default_rules"].value("show_desk", true);
-    m_ignoreOffsets = jsonData["default_rules"].value("ignore_offsets", false);
+    if(jsonData.contains("defualt_rules")) {
+      m_defaultImage = jsonData["default_rules"].value("image", "");
+      m_showDesk = jsonData["default_rules"].value("show_desk", true);
+      m_ignoreOffsets = jsonData["default_rules"].value("ignore_offsets", false);
+    }
 
     for (const auto& overlayData : jsonData["layers"]) 
     {
-        if (!overlayData.is_object()) continue;
+        if (!overlayData.is_object()) {
+          continue;
+        }
 
         ActorLayer layer;
         const auto& obj = overlayData;
@@ -47,10 +49,8 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
         layer.blendMode = obj.value("blend_mode", "");
         layer.defaultAsset = obj.value("default", "");
 
-        if(obj.contains("offset"))
-        {
-          layer.layerOffset =
-          {
+        if(obj.contains("offset")) {
+          layer.layerOffset = {
               obj["offset"].value("x", 0),
               obj["offset"].value("y", 0),
               obj["offset"].value("width", 0),
@@ -65,8 +65,9 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
         {
             for (const auto& val : obj["variations"]) 
             {
-                if (val.is_string())
-                    layer.variationOptions.push_back(imagePrefix + val.get<std::string>());
+              if (val.is_string()) {
+                layer.variationOptions.push_back(imagePrefix + val.get<std::string>());
+              }
             }
         }
 

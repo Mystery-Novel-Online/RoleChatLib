@@ -13,8 +13,7 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
 
     JsonData jsonData = JsonUtils::loadFile(path + "/char.json", m_validCharacter);
 
-    if(!m_validCharacter)
-    {
+    if(!m_validCharacter) {
       return;
     }
 
@@ -28,11 +27,12 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
     m_outfitsOrder.clear();
     if (jsonData.contains("outfit_order") && jsonData["outfit_order"].is_array()) 
     {
-        for (const auto& val : jsonData["outfit_order"]) 
-        {
-            if (val.is_string())
-                m_outfitsOrder.push_back(val.get<std::string>());
+      for (const auto& val : jsonData["outfit_order"])
+      {
+        if (val.is_string()) {
+          m_outfitsOrder.push_back(val.get<std::string>());
         }
+      }
     }
 
     std::vector<ActorScalingPreset> presets;
@@ -65,8 +65,9 @@ void JsonActorData::reload()
     m_outfitNames.clear();
 
     std::string actorPath = path();
-    if(!m_validCharacter)
+    if(!m_validCharacter) {
       return;
+    }
 
     std::filesystem::path outfitPath = std::filesystem::u8path(actorPath + "/outfits");
 
@@ -74,9 +75,9 @@ void JsonActorData::reload()
     std::vector<std::string> subdirs;
     if (std::filesystem::exists(outfitPath) && std::filesystem::is_directory(outfitPath)) {
       for (const auto& entry : fs::directory_iterator(outfitPath)) {
-          if (entry.is_directory()) {
-              subdirs.push_back(entry.path().filename().string());
-          }
+        if (entry.is_directory()) {
+          subdirs.push_back(entry.path().filename().string());
+        }
       }
     }
     if (subdirs.empty()) {
@@ -88,9 +89,9 @@ void JsonActorData::reload()
         std::filesystem::path fullOutfitPath = std::filesystem::u8path(actorPath + "/outfits/" + name + "/outfit.json");
         std::time_t modifiedTime = 0;
         try {
-            modifiedTime = fs::last_write_time(fs::path(fullOutfitPath)).time_since_epoch().count();
+          modifiedTime = fs::last_write_time(fs::path(fullOutfitPath)).time_since_epoch().count();
         } catch (...) {
-            continue;
+          continue;
         }
 
         bool needsReload = true;
@@ -100,33 +101,35 @@ void JsonActorData::reload()
 
         if (outfitIt != m_outfits.end() && modTimeIt != m_outfitModifiedTimes.end())
         {
-            if (modTimeIt->second == modifiedTime)
-            {
-                needsReload = false;
-            }
-            else
-            {
-                m_outfits.erase(outfitIt);
-                m_outfitModifiedTimes.erase(modTimeIt);
-            }
+          if (modTimeIt->second == modifiedTime)
+          {
+            needsReload = false;
+          }
+          else
+          {
+            m_outfits.erase(outfitIt);
+            m_outfitModifiedTimes.erase(modTimeIt);
+          }
         }
 
         if (needsReload)
         {
-            m_outfitNames.push_back(name);
-            m_outfits[name] = std::make_unique<rolechat::actor::ActorOutfit>(folder(), name, actorPath);
-            m_outfitModifiedTimes[name] = modifiedTime;
+          m_outfitNames.push_back(name);
+          m_outfits[name] = std::make_unique<rolechat::actor::ActorOutfit>(folder(), name, actorPath);
+          m_outfitModifiedTimes[name] = modifiedTime;
         }
         else
         {
-            m_outfitNames.push_back(name);  
+          m_outfitNames.push_back(name);
         }
     }
 
     std::vector<std::string> ordered;
-    for (const auto& name : m_outfitsOrder)
-        if (std::find(m_outfitNames.begin(), m_outfitNames.end(), name) != m_outfitNames.end())
-            ordered.push_back(name);
+    for (const auto& name : m_outfitsOrder) {
+      if (std::find(m_outfitNames.begin(), m_outfitNames.end(), name) != m_outfitNames.end()) {
+        ordered.push_back(name);
+      }
+    }
 
     for (const auto& name : m_outfitNames)
         if (std::find(m_outfitsOrder.begin(), m_outfitsOrder.end(), name) == m_outfitsOrder.end())
@@ -139,8 +142,9 @@ std::unordered_map<std::string, ActorOutfit *> JsonActorData::outfits() const
 {
   std::unordered_map<std::string, actor::ActorOutfit*> result;
 
-  for (const auto& [name, outfit] : m_outfits)
+  for (const auto& [name, outfit] : m_outfits) {
     result.emplace(name, outfit.get());
+  }
 
   return result;
 }
@@ -149,7 +153,9 @@ std::string JsonActorData::showname() const
 {
     const std::string& currentOutfit = outfit();
     auto it = m_outfits.find(currentOutfit);
-    if (it == m_outfits.end() || !it->second) return IActorData::showname();
+    if (it == m_outfits.end() || !it->second) {
+      return IActorData::showname();
+    }
     const std::string& outfitShowname = it->second->showname();
     return outfitShowname.empty() ? IActorData::showname() : outfitShowname;
 }
@@ -158,7 +164,9 @@ std::string JsonActorData::side() const
 {
   const std::string& currentOutfit = outfit();
   auto it = m_outfits.find(currentOutfit);
-  if (it == m_outfits.end() || !it->second) return IActorData::side();
+  if (it == m_outfits.end() || !it->second) {
+    return IActorData::side();
+  }
   return it->second->position().has_value() ? it->second->position().value() : IActorData::side();
 }
 
@@ -168,39 +176,37 @@ std::vector<ActorEmote> JsonActorData::emotes()
 
     if (currentOutfit == "<All>")
     {
-        std::vector<ActorEmote> all;
-        for (const auto& outfitName : m_outfitNames)
-        {
-            auto it = m_outfits.find(outfitName);
-            if (it != m_outfits.end() && it->second)
-            {
-                const auto& emotesVec = it->second->emotes();
-                all.insert(all.end(), emotesVec.begin(), emotesVec.end());
-            }
+      std::vector<ActorEmote> all;
+      for (const auto& outfitName : m_outfitNames) {
+        auto it = m_outfits.find(outfitName);
+        if (it != m_outfits.end() && it->second) {
+          const auto& emotesVec = it->second->emotes();
+          all.insert(all.end(), emotesVec.begin(), emotesVec.end());
         }
-        return all;
+      }
+      return all;
     }
 
     auto it = m_outfits.find(currentOutfit);
-    if (it != m_outfits.end() && it->second)
-    {
-        return it->second->emotes();
+    if (it != m_outfits.end() && it->second) {
+      return it->second->emotes();
     }
     return {};
 }
 
 std::string JsonActorData::buttonImage(const ActorEmote& emote, bool enabled) const
 {
-    return "outfits/" + emote.outfitName + "/emotions/" + emote.comment + (enabled ? "_on" : "");
+  return "outfits/" + emote.outfitName + "/emotions/" + emote.comment + (enabled ? "_on" : "");
 }
 
 std::string JsonActorData::selectedImage(const ActorEmote& emote) const
 {
-    return "outfits/" + outfit() + "/emotions/selected";
+  return "outfits/" + outfit() + "/emotions/selected";
 }
 
 void JsonActorData::switchOutfit(const std::string& outfit)
 {
-    if (std::find(m_outfitNames.begin(), m_outfitNames.end(), outfit) != m_outfitNames.end() || outfit == "<All>")
-        IActorData::switchOutfit(outfit);
+  if (std::find(m_outfitNames.begin(), m_outfitNames.end(), outfit) != m_outfitNames.end() || outfit == "<All>") {
+    IActorData::switchOutfit(outfit);
+  }
 }
