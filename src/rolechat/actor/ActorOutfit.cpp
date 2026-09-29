@@ -31,6 +31,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
 
     if(jsonData.contains("default_rules")) {
       m_defaultImage = jsonData["default_rules"].value("image", "");
+      m_defaultOutfit = jsonData["default_rules"].value("outfit", "");
       m_showDesk = jsonData["default_rules"].value("show_desk", true);
       m_ignoreOffsets = jsonData["default_rules"].value("ignore_offsets", false);
     }
@@ -90,9 +91,34 @@ void ActorOutfit::readEmotes(const JsonData& data)
 {
     for (const auto& emoteData : data["emotes"]) 
     {
-        if (!emoteData.is_object()) continue;
+        if (!emoteData.is_object()) {
+          continue;
+        }
 
-        std::string sharedOutfit = emoteData.contains("outfit") ? emoteData.value("outfit", m_name) : m_name;
+        if(emoteData.contains("emotes")) {
+          std::string defaultImage = m_defaultImage;
+          std::string defaultOutfit = m_defaultOutfit;
+
+          m_defaultImage = emoteData.value("image", m_defaultImage);
+          m_defaultOutfit = emoteData.value("outfit", m_defaultOutfit);
+
+          readEmotes(emoteData);
+
+          m_defaultImage = defaultImage;
+          m_defaultOutfit = defaultOutfit;
+          continue;
+        }
+
+        std::string sharedOutfit = m_name;
+
+        bool outfitOverride = emoteData.contains("outfit");
+        if(outfitOverride) {
+          sharedOutfit = emoteData.value("outfit", m_name);
+        }
+        else if (!m_defaultOutfit.empty()) {
+          sharedOutfit = m_defaultOutfit;
+        }
+
         std::string emoteName    = emoteData.value("name", "");
         std::string animName     = emoteData.value("pre", "");
         std::string videoFile    = emoteData.value("video", "");
