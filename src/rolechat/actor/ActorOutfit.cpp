@@ -29,7 +29,7 @@ ActorOutfit::ActorOutfit(const std::string &character, const std::string &outfit
 
     m_showname = jsonData.value("showname", "");
 
-    if(jsonData.contains("defualt_rules")) {
+    if(jsonData.contains("default_rules")) {
       m_defaultImage = jsonData["default_rules"].value("image", "");
       m_showDesk = jsonData["default_rules"].value("show_desk", true);
       m_ignoreOffsets = jsonData["default_rules"].value("ignore_offsets", false);
