@@ -3,6 +3,7 @@
 #include <fstream>
 #include <algorithm>
 #include <chrono>
+#include <rolechat/filesystem/RCDir.h>
 
 using namespace rolechat::actor;
 
@@ -22,15 +23,30 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
     setBlips(jsonData.value("blips", ""));
     setSide(jsonData.value("side", ""));
 
+    m_outfitsOrder.clear();
+    std::string include = jsonData.value("include", "");
+
+    if(!include.empty()) {
+      rolechat::fs::RCDir directory("characters/" + include, true);
+      std::string result = directory.findFirst();
+      if(!result.empty()) {
+        m_includedActor = std::make_unique<rolechat::actor::JsonActorData>();
+        m_includedActor->load(include, result);
+
+        m_outfitsOrder = outfitNames();
+
+      }
+    }
+
     setScalingMode(jsonData.value("scaling_mode", "automatic"));
 
-    m_outfitsOrder.clear();
     if (jsonData.contains("outfit_order") && jsonData["outfit_order"].is_array()) 
     {
       for (const auto& val : jsonData["outfit_order"])
       {
         if (val.is_string()) {
-          m_outfitsOrder.push_back(val.get<std::string>());
+          std::string outfitName = val.get<std::string>();
+          m_outfitsOrder.push_back(outfitName);
         }
       }
     }
@@ -43,8 +59,9 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
                 if (obj.contains("name")) {
                     ActorScalingPreset preset;
                     preset.name = obj["name"].get<std::string>();
-                    if (obj.contains("horizontal"))
+                    if (obj.contains("horizontal")) {
                       preset.horizontalAlign = obj["horizontal"].get<int>();
+                    }
                     if (obj.contains("vertical"))
                         preset.verticalAlign = obj["vertical"].get<int>();
                     if (obj.contains("scale"))
@@ -84,6 +101,14 @@ void JsonActorData::reload()
       return;
     }
 
+
+    if(m_includedActor) {
+      m_outfitNames = m_includedActor->outfitNames();
+      for (const auto& [name, outfit] : m_includedActor->outfits()) {
+        m_outfits[name] = std::make_unique<actor::ActorOutfit>(*outfit);
+      }
+    }
+
     for (const std::string& name : subdirs)
     {
         std::filesystem::path fullOutfitPath = std::filesystem::u8path(actorPath + "/outfits/" + name + "/outfit.json");
@@ -115,7 +140,12 @@ void JsonActorData::reload()
         if (needsReload)
         {
           m_outfitNames.push_back(name);
-          m_outfits[name] = std::make_unique<rolechat::actor::ActorOutfit>(folder(), name, actorPath);
+          if (m_outfits.find(name) != m_outfits.end()) {
+            m_outfits[name]->mergeOutfit(rolechat::actor::ActorOutfit(folder(), name, actorPath));
+          }
+          else {
+            m_outfits[name] = std::make_unique<rolechat::actor::ActorOutfit>(folder(), name, actorPath);
+          }
           m_outfitModifiedTimes[name] = modifiedTime;
         }
         else
@@ -124,16 +154,30 @@ void JsonActorData::reload()
         }
     }
 
+    std::vector<std::string> includedOutfits = {};
+    if(m_includedActor != nullptr) {
+      includedOutfits = m_includedActor->outfitNames();
+    }
+
     std::vector<std::string> ordered;
     for (const auto& name : m_outfitsOrder) {
-      if (std::find(m_outfitNames.begin(), m_outfitNames.end(), name) != m_outfitNames.end()) {
+      if (std::find(includedOutfits.begin(), includedOutfits.end(), name) != includedOutfits.end()) {
+        ordered.push_back(name);
+      }
+      else if (std::find(m_outfitNames.begin(), m_outfitNames.end(), name) != m_outfitNames.end()) {
+        ordered.push_back(name);
+      }
+
+
+    }
+
+    for (const auto& name : m_outfitNames) {
+      if (std::find(m_outfitsOrder.begin(), m_outfitsOrder.end(), name) == m_outfitsOrder.end()) {
         ordered.push_back(name);
       }
     }
 
-    for (const auto& name : m_outfitNames)
-        if (std::find(m_outfitsOrder.begin(), m_outfitsOrder.end(), name) == m_outfitsOrder.end())
-            ordered.push_back(name);
+
 
     m_outfitNames = std::move(ordered);
 }
@@ -209,4 +253,8 @@ void JsonActorData::switchOutfit(const std::string& outfit)
   if (std::find(m_outfitNames.begin(), m_outfitNames.end(), outfit) != m_outfitNames.end() || outfit == "<All>") {
     IActorData::switchOutfit(outfit);
   }
+}
+std::vector<std::string> rolechat::actor::JsonActorData::outfitNames() const
+{
+  return m_outfitNames;
 }

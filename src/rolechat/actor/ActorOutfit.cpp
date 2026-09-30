@@ -87,6 +87,17 @@ std::optional<std::string>& ActorOutfit::position()
   return m_position;
 }
 
+void ActorOutfit::mergeOutfit(ActorOutfit outfit)
+{
+  for(const ActorEmote& emote : outfit.emotes()) {
+    m_emotes.push_back(emote);
+  }
+
+  for(const ActorLayer& layer : outfit.layers()) {
+    m_layers.push_back(layer);
+  }
+}
+
 void ActorOutfit::readEmotes(const JsonData& data)
 {
     for (const auto& emoteData : data["emotes"]) 

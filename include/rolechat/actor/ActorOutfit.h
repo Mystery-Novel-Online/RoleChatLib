@@ -19,6 +19,8 @@ public:
     const std::vector<ActorEmote>& emotes() const noexcept { return m_emotes; }
     const std::vector<ActorLayer>& layers() const noexcept { return m_layers; }
 
+    void mergeOutfit(ActorOutfit outfit);
+
 private:
     void readEmotes(const JsonData& data);
 

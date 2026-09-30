@@ -20,7 +20,7 @@ public:
     std::unordered_map<std::string, actor::ActorOutfit*> outfits() const override;
     std::string showname() const override;
     std::string side() const override;
-    std::vector<std::string> outfitNames() const override { return m_outfitNames; }
+    std::vector<std::string> outfitNames() const override;
     std::vector<ActorEmote> emotes() override;
 
     std::string buttonImage(const ActorEmote& emote, bool enabled) const override;
@@ -34,6 +34,8 @@ private:
     std::vector<std::string> m_outfitNames = {};
     std::vector<std::string> m_outfitsOrder = {};
     std::unordered_map<std::string, std::time_t> m_outfitModifiedTimes = {};
+
+    std::unique_ptr<rolechat::actor::IActorData> m_includedActor = nullptr;
 };
 
 }
