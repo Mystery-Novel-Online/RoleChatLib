@@ -35,7 +35,8 @@ private:
     std::vector<std::string> m_outfitsOrder = {};
     std::unordered_map<std::string, std::time_t> m_outfitModifiedTimes = {};
 
-    std::unique_ptr<rolechat::actor::IActorData> m_includedActor = nullptr;
+    std::vector<std::string> m_includedActorNames = {};
+    std::unordered_map<std::string, std::unique_ptr<rolechat::actor::IActorData>> m_includedActorData = {};
 };
 
 }

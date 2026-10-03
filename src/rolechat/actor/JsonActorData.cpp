@@ -24,18 +24,33 @@ void JsonActorData::load(const std::string &folder, const std::string& path)
     setSide(jsonData.value("side", ""));
 
     m_outfitsOrder.clear();
-    std::string include = jsonData.value("include", "");
+    std::vector<std::string> include = {};
 
-    if(!include.empty()) {
-      rolechat::fs::RCDir directory("characters/" + include, true);
-      std::string result = directory.findFirst();
-      if(!result.empty()) {
-        m_includedActor = std::make_unique<rolechat::actor::JsonActorData>();
-        m_includedActor->load(include, result);
 
-        m_outfitsOrder = outfitNames();
-
+    if (jsonData.contains("include") && jsonData["include"].is_array()) {
+      for (const auto& val : jsonData["include"]) {
+        if (val.is_string()) {
+          std::string includeName = val.get<std::string>();
+          include.push_back(includeName);
+        }
       }
+    }
+    else
+    {
+      std::string includeName = jsonData.value("include", "");
+      if(!includeName.empty()) {
+        include.push_back(includeName);
+      }
+    }
+
+    for(auto& includeName : include) {
+        rolechat::fs::RCDir directory("characters/" + includeName, true);
+        std::string result = directory.findFirst();
+        if(!result.empty()) {
+          m_includedActorData[includeName] = std::make_unique<rolechat::actor::JsonActorData>();
+          m_includedActorData[includeName]->load(includeName, result);
+          m_outfitsOrder = outfitNames();
+        }
     }
 
     setScalingMode(jsonData.value("scaling_mode", "automatic"));
@@ -102,15 +117,19 @@ void JsonActorData::reload()
     }
 
 
-    if(m_includedActor) {
-      m_outfitNames = m_includedActor->outfitNames();
-      for (const auto& [name, outfit] : m_includedActor->outfits()) {
+    for (const auto& [actorName, actor] : m_includedActorData) {
+      for (const auto& [name, outfit] : actor->outfits()) {
+        if (m_outfits.find(name) != m_outfits.end()) {
+          m_outfits[name]->mergeOutfit(*outfit);
+          continue;
+        }
         m_outfits[name] = std::make_unique<actor::ActorOutfit>(*outfit);
+        m_outfitNames.push_back(name);
       }
     }
 
-    for (const std::string& name : subdirs)
-    {
+
+    for (const std::string& name : subdirs) {
         std::filesystem::path fullOutfitPath = std::filesystem::u8path(actorPath + "/outfits/" + name + "/outfit.json");
         std::time_t modifiedTime = 0;
         try {
@@ -155,8 +174,12 @@ void JsonActorData::reload()
     }
 
     std::vector<std::string> includedOutfits = {};
-    if(m_includedActor != nullptr) {
-      includedOutfits = m_includedActor->outfitNames();
+    if(!m_includedActorData.empty()) {
+      for (const auto& [actorName, actor] : m_includedActorData) {
+        for (const auto& outfitName: actor->outfitNames()) {
+          includedOutfits.push_back(outfitName);
+        }
+      }
     }
 
     std::vector<std::string> ordered;
