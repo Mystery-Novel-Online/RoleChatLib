@@ -22,7 +22,7 @@ public:
     void mergeOutfit(ActorOutfit outfit);
 
 private:
-    void readEmotes(const JsonData& data);
+    void readEmotes(const JsonData& data, const std::list<std::string>& variations = {});
 
     std::string m_name = "";
     std::string m_character = "";

@@ -98,7 +98,7 @@ void ActorOutfit::mergeOutfit(ActorOutfit outfit)
   }
 }
 
-void ActorOutfit::readEmotes(const JsonData& data)
+void ActorOutfit::readEmotes(const JsonData& data, const std::list<std::string>& variations)
 {
     for (const auto& emoteData : data["emotes"]) 
     {
@@ -112,8 +112,20 @@ void ActorOutfit::readEmotes(const JsonData& data)
 
           m_defaultImage = emoteData.value("image", m_defaultImage);
           m_defaultOutfit = emoteData.value("outfit", m_defaultOutfit);
+          std::list<std::string> groupVariations = {};
 
-          readEmotes(emoteData);
+          if (emoteData.contains("variations") && emoteData["variations"].is_array())
+          {
+            for (const auto& val : emoteData["variations"])
+            {
+              if (val.is_string()) {
+                groupVariations.push_back(val.get<std::string>());
+              }
+            }
+          }
+
+
+          readEmotes(emoteData, groupVariations);
 
           m_defaultImage = defaultImage;
           m_defaultOutfit = defaultOutfit;
@@ -169,6 +181,22 @@ void ActorOutfit::readEmotes(const JsonData& data)
         emote.sound_delay     = (sfxDelayTicks == 0) ? sfxDelayMs : sfxDelayTicks * 60;
         emote.sound_delay     = std::max(0, emote.sound_delay);
         emote.video_file      = videoFile;
+
+        if(!variations.empty()) {
+          ActorLayer layer;
+          layer.offsetName = "base_image";
+          layer.variationOptions.clear();
+
+          std::string imagePrefix = "outfits/" + emote.outfitName + "/";
+
+          for(const std::string& groupVariation : variations) {
+            layer.variationOptions.push_back(imagePrefix + groupVariation);
+          }
+
+          layer.globalSelection = true;
+          layer.spriteName = emote.dialog;
+          emote.emoteOverlays.push_back(layer);
+        }
 
         for (const ActorLayer& layer : m_layers)
         {
